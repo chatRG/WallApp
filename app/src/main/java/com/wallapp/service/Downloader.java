@@ -1,11 +1,9 @@
 package com.wallapp.service;
 
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,16 +15,6 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
-    private Activity activity;
-
-    public Downloader(Activity activity) {
-        this.activity = activity;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
 
     @Override
     protected Boolean doInBackground(Bitmap... bitmaps) {
@@ -57,14 +45,6 @@ public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean value) {
-        super.onPostExecute(value);
-        if (value) {
-            Toast.makeText(activity, "Downloaded Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 }

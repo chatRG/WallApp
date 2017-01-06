@@ -41,10 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:max="100"
                 android:indeterminate="true"
-                android:visibility="gone"
-                android:progress="45" />
+                android:max="100"
+                android:visibility="gone" />
 
         </LinearLayout>
 

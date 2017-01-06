@@ -44,6 +44,7 @@ dependencies {
     compile 'com.github.stfalcon:frescoimageviewer:0.4.1'
 
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'com.takisoft.fix:preference-v7:25.0.1.0'
     compile 'com.heinrichreimersoftware:material-intro:1.6'
 

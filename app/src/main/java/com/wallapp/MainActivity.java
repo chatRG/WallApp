@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -53,12 +53,14 @@ public class MainActivity extends AppCompatActivity
     final private String url_alt = "https://source.unsplash.com/";
     private final String width = String.valueOf(2048);
     private final String height = String.valueOf(1080);
+
     @BindView(R.id.sdv)
     SimpleDraweeView draweeView;
     @BindView(android.R.id.content)
     View contentView;
     @BindView(R.id.progress)
     ProgressBar mProgress;
+
     @BindView(R.id.fab_menu)
     FloatingActionMenu fabMenu;
     @BindView(R.id.share)
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fabSet;
     @BindView(R.id.rand)
     FloatingActionButton fabRand;
+
     private String url_ext;
     private String phone_width, phone_height;
     private Uri imageUri;
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
-        mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
+        //mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
 
         url_ext = width + "/" + height + "?random";
         setURI(url_def + url_ext);
@@ -130,12 +133,13 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
 
-                new Downloader(MainActivity.this).execute(mBitmap);
+                new Downloader().execute(mBitmap);
 
                 isDownloaded = true;
                 fabMenu.setEnabled(true);
                 draweeView.setEnabled(true);
                 mProgress.setVisibility(ProgressBar.GONE);
+                showSnack(R.string.download_success);
                 break;
 
             case R.id.sdv:
@@ -152,6 +156,7 @@ public class MainActivity extends AppCompatActivity
                 new DeleteCache(MainActivity.this);
                 updateURI();
                 draweeView.setVisibility(View.GONE);
+                draweeView.setEnabled(false);
                 Fresco.getImagePipeline().clearCaches();
                 draweeView.setImageURI(imageUri);
                 draweeView.setVisibility(View.VISIBLE);
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity
                 } finally {
                     //dataSource.close();
                     isDownloaded = false;
+                    draweeView.setEnabled(true);
                     mProgress.setVisibility(ProgressBar.GONE);
                 }
                 break;
@@ -232,6 +238,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 setBitmapWallpaper(dstBmp);
                 mProgress.setVisibility(ProgressBar.GONE);
+                showSnack(R.string.wallpaper_set_success);
                 break;
 
             case R.id.settings:
@@ -313,15 +320,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSnack(int text) {
-        Snackbar.make(contentView, text, Snackbar.LENGTH_SHORT).show();
+        TSnackbar snackbar = TSnackbar
+                .make(contentView, text, TSnackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.WHITE);
+        snackbar.setIconLeft(R.drawable.ic_intro, 48);
+        snackbar.setIconPadding(8);
+        snackbar.setMaxWidth(3000);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(Color.parseColor("#546E7A"));
+        TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+        textView.setTextColor(Color.parseColor("#EEEEEE"));
+        snackbar.show();
+
     }
 
     @Override
     public void onBackPressed() {
         if (fabMenu.isOpened())
             fabMenu.close(true);
-        else
+        else {
+            this.finish();
             super.onBackPressed();
+        }
     }
 
     @Override
