@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">WallApp</string>
+
+    <string-array name="categories">
+        <item>None</item>
+        <item>Buildings</item>
+        <item>City</item>
+        <item>Clock</item>
+        <item>Coffee</item>
+        <item>Computer</item>
+        <item>Couple</item>
+        <item>Family</item>
+        <item>Food</item>
+        <item>Girl</item>
+        <item>Landscape</item>
+        <item>Love</item>
+        <item>Man</item>
+        <item>Mountains</item>
+        <item>Music</item>
+        <item>Nature</item>
+        <item>Office</item>
+        <item>Tree</item>
+        <item>Weddings</item>
+    </string-array>
+
+    <string name="settings">Settings</string>
+    <string name="error_text">Error</string>
+    <string name="download_image_first">Download Image First</string>
+    <string name="share_image">Share Image</string>
+
+    <string name="set_as_type">Set As Wallpaper Type</string>
+
+    <string-array name="set_as_choice">
+        <item>WallApp</item>
+        <item>System</item>
+    </string-array>
+
+    <string name="about_details">About ME blah blah blah</string>
+
+</resources>

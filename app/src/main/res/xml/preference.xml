@@ -1,0 +1,49 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Customize">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="blur"
+            android:summaryOff="Image will NOT be Blurred"
+            android:summaryOn="Image will be Blurred"
+            android:title="Blur" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="gray"
+            android:summaryOff="Image will NOT be in Grayscale"
+            android:summaryOn="Image will be in Grayscale"
+            android:title="Gray" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Preference">
+
+        <ListPreference
+            android:defaultValue="None"
+            android:dialogTitle="Categories"
+            android:entries="@array/categories"
+            android:entryValues="@array/categories"
+            android:key="category"
+            android:summary="Choose a category"
+            android:title="Categories" />
+
+        <ListPreference
+            android:defaultValue="WallApp"
+            android:entries="@array/set_as_choice"
+            android:entryValues="@array/set_as_choice"
+            android:key="set_as"
+            android:summary="You don't have to download image with WallApp"
+            android:title="@string/set_as_type" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Information">
+
+        <Preference
+            android:key="about"
+            android:title="About" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

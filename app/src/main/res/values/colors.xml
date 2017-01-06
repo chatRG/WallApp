@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#2979FF</color>
+    <color name="colorNavBar">#00796B</color>
+
+    <color name="splash_bg">#009688</color>
+
+    <color name="fab_color">#2979FF</color>
+    <color name="fab_ripple">#82B1FF</color>
+
+    <color name="colorChecked">#2E7D32</color>
+
+    <color name="intro_1">#1E88E5</color>
+    <color name="intro_2">#D81B60</color>
+    <color name="intro_3">#5E35B1</color>
+
+    <color name="blue_grey_900">#263238</color>
+
+</resources>
