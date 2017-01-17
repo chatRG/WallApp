@@ -35,16 +35,22 @@
         <item>System</item>
     </string-array>
 
-    <string name="about_details">
-        Developed by chatRg\n
-        WallApp v1.0
-    </string>
-    <string name="intro_desc_1">Generate random wallpapers that fits your device\'s attitude.</string>
+    <string-array name="source">
+        <item>Uno</item>
+        <item>Dos</item>
+    </string-array>
+
+    <string name="about_details">Developed by chatRg\nWallApp v1.0.4</string>
+
     <string name="intro_title_2">Permission, please?</string>
-    <string name="intro_desc_2">We need just this one permission to download your favorite images.</string>
     <string name="intro_title_3">WallApp is all yours now</string>
+
+    <string name="intro_desc_1">Generate random wallpapers that fits your device\'s attitude.</string>
+    <string name="intro_desc_2">We need just this one permission to download your favorite images.</string>
     <string name="intro_desc_3">Almost done! Now let\'s generate some random wallpapers.</string>
+
     <string name="download_success">Downloaded Successfully!</string>
+    <string name="download_failed">Download Failed!</string>
     <string name="wallpaper_set_success">Wallpaper Set Successfully!</string>
 
 </resources>

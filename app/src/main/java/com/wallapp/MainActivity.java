@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, Downloader.AsyncResponse {
 
     private static Bitmap mBitmap;
     private static SharedPreferences sharedPref;
@@ -133,13 +133,11 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
 
-                new Downloader().execute(mBitmap);
+                new Downloader(this).execute(mBitmap);
 
                 isDownloaded = true;
                 fabMenu.setEnabled(true);
                 draweeView.setEnabled(true);
-                mProgress.setVisibility(ProgressBar.GONE);
-                showSnack(R.string.download_success);
                 break;
 
             case R.id.sdv:
@@ -150,7 +148,6 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.rand:
-                mProgress.setVisibility(ProgressBar.VISIBLE);
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
                 new DeleteCache(MainActivity.this);
@@ -191,12 +188,12 @@ public class MainActivity extends AppCompatActivity
                     //dataSource.close();
                     isDownloaded = false;
                     draweeView.setEnabled(true);
-                    mProgress.setVisibility(ProgressBar.GONE);
                 }
                 break;
 
             case R.id.setwall:
                 fabMenu.close(true);
+                mProgress.setVisibility(ProgressBar.VISIBLE);
 
                 Bitmap dstBmp, srcBmp = mBitmap;
                 String setType = sharedPref.getString("set_as", "WallApp");
@@ -222,7 +219,6 @@ public class MainActivity extends AppCompatActivity
 
                 /*Set the wallpaper in-app*/
 
-                mProgress.setVisibility(ProgressBar.VISIBLE);
                 if (mBitmap.getWidth() >= mBitmap.getHeight()) {
                     dstBmp = Bitmap.createBitmap(srcBmp,
                             srcBmp.getWidth() / 2 - srcBmp.getHeight() / 2, 0,
@@ -328,7 +324,8 @@ public class MainActivity extends AppCompatActivity
         snackbar.setMaxWidth(3000);
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.parseColor("#546E7A"));
-        TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+        TextView textView = (TextView)
+                snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
         textView.setTextColor(Color.parseColor("#EEEEEE"));
         snackbar.show();
 
@@ -348,5 +345,14 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         new DeleteCache(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void processFinish(boolean result) {
+        mProgress.setVisibility(ProgressBar.GONE);
+        if (result)
+            showSnack(R.string.download_success);
+        else
+            showSnack(R.string.download_failed);
     }
 }

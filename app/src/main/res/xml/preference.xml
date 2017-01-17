@@ -23,10 +23,10 @@
         <ListPreference
             android:defaultValue="None"
             android:dialogTitle="Categories"
+            android:enabled="false"
             android:entries="@array/categories"
             android:entryValues="@array/categories"
             android:key="category"
-            android:summary="Choose a category"
             android:title="Categories" />
 
         <ListPreference
@@ -34,8 +34,14 @@
             android:entries="@array/set_as_choice"
             android:entryValues="@array/set_as_choice"
             android:key="set_as"
-            android:summary="You don't have to download image with WallApp"
             android:title="@string/set_as_type" />
+
+        <ListPreference
+            android:defaultValue="Alpha"
+            android:entries="@array/source"
+            android:entryValues="@array/source"
+            android:key="source"
+            android:title="Source" />
 
     </PreferenceCategory>
 

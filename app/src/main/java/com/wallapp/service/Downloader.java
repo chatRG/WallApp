@@ -16,6 +16,16 @@ import java.util.Date;
 
 public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
 
+    public interface AsyncResponse {
+        void processFinish(boolean result);
+    }
+
+    public AsyncResponse delegate = null;
+
+    public Downloader(AsyncResponse delegate) {
+        this.delegate = delegate;
+    }
+
     @Override
     protected Boolean doInBackground(Bitmap... bitmaps) {
 
@@ -40,11 +50,15 @@ public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
             }
             inputStream.close();
             outputStream.close();
-            Thread.sleep(4000);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        delegate.processFinish(aBoolean);
     }
 }
