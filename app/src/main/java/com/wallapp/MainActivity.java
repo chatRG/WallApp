@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.facebook.common.executors.CallerThreadExecutor;
@@ -42,9 +41,6 @@ import com.wallapp.utils.ModWallpaper;
 import com.wallapp.utils.Randomize;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,8 +109,6 @@ public class MainActivity extends AppCompatActivity
         fabSet.setOnClickListener(this);
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
-
-        Toast.makeText(this, new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()), Toast.LENGTH_LONG).show();
 
         //mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
 
