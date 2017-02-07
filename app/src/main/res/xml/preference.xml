@@ -18,7 +18,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Preference">
+    <PreferenceCategory android:title="Wallpaper Preference">
 
         <ListPreference
             android:defaultValue="None"
@@ -42,6 +42,13 @@
             android:entryValues="@array/source"
             android:key="source"
             android:title="Source" />
+
+        <ListPreference
+            android:defaultValue="None"
+            android:entries="@array/interval"
+            android:entryValues="@array/interval"
+            android:key="interval"
+            android:title="Change Interval" />
 
     </PreferenceCategory>
 

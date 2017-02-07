@@ -5,10 +5,10 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.wallapp"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 25
-        versionCode 104
-        versionName "1.0.4"
+        versionCode 151
+        versionName "1.5.1"
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -17,8 +17,7 @@ android {
         debug {
             minifyEnabled true
             useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             shrinkResources false
@@ -40,7 +39,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile 'com.facebook.fresco:fresco:1.0.0'
+    compile 'com.facebook.fresco:fresco:1.0.1'
     compile 'com.github.stfalcon:frescoimageviewer:0.4.1'
 
     compile 'com.github.clans:fab:1.6.4'

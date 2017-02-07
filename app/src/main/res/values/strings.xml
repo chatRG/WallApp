@@ -28,7 +28,7 @@
     <string name="download_image_first">Download Image First</string>
     <string name="share_image">Share Image</string>
 
-    <string name="set_as_type">Set As Wallpaper Type</string>
+    <string name="set_as_type">Set As Type</string>
 
     <string-array name="set_as_choice">
         <item>WallApp</item>
@@ -38,9 +38,16 @@
     <string-array name="source">
         <item>Uno</item>
         <item>Dos</item>
+        <item>Bing Daily</item>
     </string-array>
 
-    <string name="about_details">Developed by chatRg\nWallApp v1.0.4</string>
+    <string-array name="interval">
+        <item>None</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+    </string-array>
+
+    <string name="about_details">Developed by chatRg\nWallApp v1.5.1</string>
 
     <string name="intro_title_2">Permission, please?</string>
     <string name="intro_title_3">WallApp is all yours now</string>

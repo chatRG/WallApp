@@ -18,4 +18,6 @@
 
     <color name="blue_grey_900">#263238</color>
 
+    <color name="textColorPrimary">#FFFFFF</color>
+
 </resources>

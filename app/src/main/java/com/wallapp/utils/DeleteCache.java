@@ -1,4 +1,4 @@
-package com.wallapp.service;
+package com.wallapp.utils;
 
 
 import android.content.Context;

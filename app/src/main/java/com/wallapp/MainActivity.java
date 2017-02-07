@@ -1,6 +1,5 @@
 package com.wallapp;
 
-import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.facebook.common.executors.CallerThreadExecutor;
@@ -34,33 +34,38 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.wallapp.activities.MainIntroActivity;
 import com.wallapp.activities.SettingsActivity;
-import com.wallapp.service.DeleteCache;
+import com.wallapp.model.BitmapStore;
 import com.wallapp.service.Downloader;
-import com.wallapp.utils.DeviceUtils;
+import com.wallapp.service.ParseJSON;
+import com.wallapp.utils.DeleteCache;
+import com.wallapp.utils.ModWallpaper;
+import com.wallapp.utils.Randomize;
 
 import java.io.File;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, Downloader.AsyncResponse {
+        implements View.OnClickListener,
+        Downloader.AsyncResponse,
+        ParseJSON.AsyncResponse {
 
-    private static Bitmap mBitmap;
     private static SharedPreferences sharedPref;
-    final private String url_def = "https://unsplash.it/";
-    final private String url_alt = "https://source.unsplash.com/";
-    private final String width = String.valueOf(2048);
-    private final String height = String.valueOf(1080);
-
+    private static String BING_DEF;
+    private static Uri imageUri;
+    private static Boolean isDownloaded = false;
+    private static BitmapStore imgStore;
+    private static Bitmap mBitmap;
     @BindView(R.id.sdv)
     SimpleDraweeView draweeView;
     @BindView(android.R.id.content)
     View contentView;
     @BindView(R.id.progress)
     ProgressBar mProgress;
-
     @BindView(R.id.fab_menu)
     FloatingActionMenu fabMenu;
     @BindView(R.id.share)
@@ -73,11 +78,6 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fabSet;
     @BindView(R.id.rand)
     FloatingActionButton fabRand;
-
-    private String url_ext;
-    private String phone_width, phone_height;
-    private Uri imageUri;
-    private Boolean isDownloaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +107,6 @@ public class MainActivity extends AppCompatActivity
 
     private void init() {
 
-        phone_width = String.valueOf(new DeviceUtils().getScreenWidth());
-        phone_height = String.valueOf(new DeviceUtils().getScreenHeight());
-
         draweeView.setOnClickListener(this);
         fabSettings.setOnClickListener(this);
         fabDownload.setOnClickListener(this);
@@ -117,10 +114,12 @@ public class MainActivity extends AppCompatActivity
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
+        Toast.makeText(this, new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()), Toast.LENGTH_LONG).show();
+
         //mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
 
-        url_ext = width + "/" + height + "?random";
-        setURI(url_def + url_ext);
+        new ParseJSON(this).execute();
+        imgStore = new BitmapStore();
     }
 
     @Override
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
 
-                new Downloader(this).execute(mBitmap);
+                new Downloader(this).execute(imgStore.getBitmap());
 
                 isDownloaded = true;
                 fabMenu.setEnabled(true);
@@ -151,7 +150,9 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
                 new DeleteCache(MainActivity.this);
-                updateURI();
+                Randomize mRand = new Randomize(this, BING_DEF);
+                mRand.updateURI();
+                imageUri = mRand.getURI();
                 draweeView.setVisibility(View.GONE);
                 draweeView.setEnabled(false);
                 Fresco.getImagePipeline().clearCaches();
@@ -195,46 +196,21 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 mProgress.setVisibility(ProgressBar.VISIBLE);
 
-                Bitmap dstBmp, srcBmp = mBitmap;
+                File mFile = getLastModFile();
                 String setType = sharedPref.getString("set_as", "WallApp");
 
-                /* System Set As Wallpaper Intent*/
-
-                if (setType.equals("System")) {
-                    File lastFile = getLastModFile(Environment
-                            .getExternalStorageDirectory()
-                            .getAbsolutePath() + "/Wallapp/");
-
-                    if (lastFile == null || !isDownloaded) {
-                        showSnack(R.string.download_image_first);
-                        break;
-                    }
-                    Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                    intent.setDataAndType(Uri.fromFile(lastFile), "image/jpeg");
-                    intent.putExtra("mimeType", "image/jpeg");
-                    this.startActivity(Intent.createChooser(intent, "Set as:"));
+                if (setType.equals("System") && (mFile == null || !isDownloaded)) {
+                    showSnack(R.string.download_image_first);
+                    mProgress.setVisibility(ProgressBar.GONE);
                     break;
                 }
 
-                /*Set the wallpaper in-app*/
+                new ModWallpaper(this).setWallpaper(mBitmap, setType, mFile);
 
-                if (mBitmap.getWidth() >= mBitmap.getHeight()) {
-                    dstBmp = Bitmap.createBitmap(srcBmp,
-                            srcBmp.getWidth() / 2 - srcBmp.getHeight() / 2, 0,
-                            srcBmp.getHeight(),
-                            srcBmp.getHeight()
-                    );
-                } else {
-                    dstBmp = Bitmap.createBitmap(srcBmp, 0,
-                            srcBmp.getHeight() / 2 - srcBmp.getWidth() / 2,
-                            srcBmp.getWidth(),
-                            srcBmp.getWidth()
-                    );
+                if (setType.equals("WallApp")) {
+                    showSnack(R.string.wallpaper_set_success);
                 }
-                setBitmapWallpaper(dstBmp);
                 mProgress.setVisibility(ProgressBar.GONE);
-                showSnack(R.string.wallpaper_set_success);
                 break;
 
             case R.id.settings:
@@ -245,9 +221,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.share:
                 fabMenu.close(true);
-                File lastFile = getLastModFile(Environment
-                        .getExternalStorageDirectory()
-                        .getAbsolutePath() + "/Wallapp/");
+                File lastFile = getLastModFile();
 
                 if (lastFile == null || !isDownloaded) {
                     showSnack(R.string.download_image_first);
@@ -261,45 +235,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void updateURI() {
-        boolean isBlur = sharedPref.getBoolean("blur", false);
-        boolean isGray = sharedPref.getBoolean("gray", false);
-        String category = sharedPref.getString("category", null);
-        url_ext = "";
-
-        if (category != null && !category.equals("None")) {
-            url_ext = "featured/?" + category.toLowerCase();
-            setURI(url_alt + url_ext);
-        } else {
-            if (isGray)
-                url_ext += "g/";
-            url_ext += width + "/" + height + "/";
-            if (isBlur)
-                url_ext += "?blur&random";
-            else
-                url_ext += "?random";
-            setURI(url_def + url_ext);
-        }
-    }
-
-    private void setURI(String url) {
-        imageUri = Uri.parse(url);
-    }
-
-    private void setBitmapWallpaper(Bitmap bitmap) {
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-        wallpaperManager.suggestDesiredDimensions(Integer.valueOf(phone_width),
-                Integer.valueOf(phone_height));
-        try {
-            wallpaperManager.clear();
-            wallpaperManager.setBitmap(bitmap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Nullable
-    private File getLastModFile(String dirPath) {
+    private File getLastModFile() {
+        String dirPath = Environment
+                .getExternalStorageDirectory()
+                .getAbsolutePath() + "/Wallapp/";
         File dir = new File(dirPath);
         File[] files = dir.listFiles();
         if (files == null || files.length == 0) {
@@ -354,5 +294,10 @@ public class MainActivity extends AppCompatActivity
             showSnack(R.string.download_success);
         else
             showSnack(R.string.download_failed);
+    }
+
+    @Override
+    public void jsonURI(String mURI) {
+        BING_DEF = mURI;
     }
 }

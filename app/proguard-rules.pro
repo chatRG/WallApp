@@ -29,5 +29,3 @@
     @butterknife.* <methods>;
 }
 -dontwarn butterknife.internal.**
-
-

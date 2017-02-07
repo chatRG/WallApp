@@ -1,4 +1,4 @@
-package com.wallapp.utils;
+package com.wallapp.init;
 
 import android.app.Application;
 

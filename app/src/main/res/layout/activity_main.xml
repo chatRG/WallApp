@@ -8,7 +8,7 @@
     android:background="@color/blue_grey_900"
     tools:context="com.wallapp.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,7 +17,6 @@
             android:id="@+id/viewA"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
             android:orientation="horizontal">
 
             <include
@@ -30,9 +29,9 @@
         <LinearLayout
             android:id="@+id/viewB"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.9"
-            android:background="@color/colorPrimary"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:background="#99009688"
             android:orientation="horizontal">
 
             <ProgressBar
@@ -47,7 +46,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"
@@ -91,7 +90,7 @@
             android:id="@+id/setwall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_image"
+            android:src="@drawable/ic_set"
             app:fab_label="Set as wallpaper"
             app:fab_size="mini" />
 
