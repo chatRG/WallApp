@@ -13,8 +13,8 @@
     </style>
 
     <style name="PreferenceScreen" parent="AppTheme">
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColorPrimaryDark</item>
+        <item name="android:textColorSecondary">@color/textColorSecondaryDark</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/blue_grey_900
         </item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/blue_grey_900</item>

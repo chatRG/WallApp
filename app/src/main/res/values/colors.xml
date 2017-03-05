@@ -19,5 +19,9 @@
     <color name="blue_grey_900">#263238</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#ECEFF1</color>
+
+    <color name="textColorPrimaryDark">#000000</color>
+    <color name="textColorSecondaryDark">#263238</color>
 
 </resources>

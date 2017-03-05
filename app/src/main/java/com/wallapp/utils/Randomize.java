@@ -30,7 +30,7 @@ public class Randomize {
         String source = sharedPref.getString("source", "Uno");
 
         DeviceMetrics deviceMetrics = new DeviceMetrics();
-        WIDTH = deviceMetrics.getMaxWidth() + "";
+        WIDTH = deviceMetrics.getScreenWidth() * 2 + "";
         HEIGHT = deviceMetrics.getScreenHeight() * 1.5 + "";
 
         if (source.equals("Bing Daily") && !BING_DEF.isEmpty()) {
