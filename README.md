@@ -1,15 +1,15 @@
-# WallApp v1.0
-######Generate random wallpapers that fits your mobile's personality.
+# WallApp v1.5
+###### Generate random wallpapers that fits your mobile's personality.
 
 
-[![Apache 2.0](http://img.shields.io/badge/license-Apache 2.0-blue.svg?style=flat)]
-(https://raw.githubusercontent.com/chatRG/WallApp/master/License.txt)
-[![Stable Build](http://img.shields.io/badge/build-stable-brightgreen.svg?style=flat)]() 
-[![Stable Build](http://img.shields.io/badge/Android-4.2.2+-brightred.svg?style=flat)]()
+
+[![](https://img.shields.io/badge/build-stable-brightgreen.svg?style=flat)]() 
+[![](https://img.shields.io/badge/Android-5.0.1+-brightred.svg?style=flat)]()
+
 
 ![Banner](https://raw.githubusercontent.com/chatRG/WallApp/master/Banner.png)
 
-####Features:
+#### Features:
   * Random wallpapers
   * Material Design
   * Categories to choose from
@@ -22,7 +22,7 @@
   
   ![Screenshot](https://raw.githubusercontent.com/chatRG/WallApp/master/screenshot.png)
   
-#####Open Source libraries used:
+##### Open Source libraries used:
 - Android AppCompat (Google)
 - Android Support (Google)
 - Android Design (Google)
