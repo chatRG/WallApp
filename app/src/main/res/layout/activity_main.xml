@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_alignParentBottom="true"
-            android:background="#99009688"
+            android:background="@color/toolbarPrimary"
             android:orientation="horizontal">
 
             <ProgressBar
@@ -52,7 +52,7 @@
         android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:padding="@dimen/fab_padding"
         app:layout_anchor="@id/viewA"
         app:layout_anchorGravity="bottom|end"
         app:menu_colorNormal="@color/fab_color"
@@ -84,6 +84,15 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_download"
             app:fab_label="Download"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:visibility="gone"
+            app:fab_label="Edit"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton

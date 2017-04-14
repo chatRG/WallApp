@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">WallApp</string>
+    <string name="app_logo">App Logo</string>
 
     <string-array name="categories">
         <item>None</item>
@@ -38,7 +39,14 @@
     <string-array name="source">
         <item>Uno</item>
         <item>Dos</item>
-        <item>Bing Daily</item>
+        <item>Bing daily</item>
+    </string-array>
+
+    <string-array name="quality">
+        <item>Best fit</item>
+        <item>HD</item>
+        <item>Full HD</item>
+        <item>Crazy UHD</item>
     </string-array>
 
     <string-array name="interval">
@@ -46,8 +54,6 @@
         <item>Daily</item>
         <item>Weekly</item>
     </string-array>
-
-    <string name="about_details">Developed by chatRg\nWallApp v1.5.2</string>
 
     <string name="intro_title_2">Permission, please?</string>
     <string name="intro_title_3">WallApp is all yours now</string>
@@ -58,6 +64,14 @@
 
     <string name="download_success">Downloaded Successfully!</string>
     <string name="download_failed">Download Failed!</string>
+
     <string name="wallpaper_set_success">Wallpaper Set Successfully!</string>
+
+    <string name="no_network_connection">No Network Connection</string>
+    <string name="no_network_message">Network connection must be switched on to run this application</string>
+
+    <string name="about_details">Developed by chatRg</string>
+    <string name="rights_reserved">© 2016&#8211;2017 \nAll rights reserved.\n</string>
+    <string name="open_source_licenses">Open Source Licenses</string>
 
 </resources>

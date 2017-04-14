@@ -1,14 +1,19 @@
 package com.wallapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -112,8 +117,29 @@ public class MainActivity extends AppCompatActivity
 
         //mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
 
+        if (!isNetworkAvailable()) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_network_connection)
+                    .setMessage(R.string.no_network_message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finishFromChild(MainActivity.this);
+                        }
+                    })
+                    .setCancelable(false)
+                    .setIcon(R.drawable.ic_error)
+                    .show();
+        }
+
         new ParseJSON(this).execute();
         imgStore = new BitmapStore();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override

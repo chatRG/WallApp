@@ -18,7 +18,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Wallpaper Preference">
+    <PreferenceCategory android:title="User controls">
 
         <ListPreference
             android:defaultValue="None"
@@ -44,19 +44,30 @@
             android:title="Source" />
 
         <ListPreference
+            android:defaultValue="Best fit"
+            android:entries="@array/quality"
+            android:entryValues="@array/quality"
+            android:key="quality"
+            android:title="Quality" />
+
+        <ListPreference
             android:defaultValue="None"
             android:entries="@array/interval"
             android:entryValues="@array/interval"
             android:key="interval"
-            android:title="Change Interval" />
+            android:title="Refresh Interval" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Information">
+    <PreferenceCategory android:title="About">
+
+        <Preference
+            android:key="open_licenses"
+            android:title="Open Source Licenses" />
 
         <Preference
             android:key="about"
-            android:title="About" />
+            android:title="App info" />
     </PreferenceCategory>
 
 </PreferenceScreen>

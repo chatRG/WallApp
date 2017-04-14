@@ -3,6 +3,8 @@ package com.wallapp.service;
 
 import android.os.AsyncTask;
 
+import com.wallapp.utils.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParseJSON extends AsyncTask<Void, Void, String> {
-    private static final String JSON_URL = "https://www.bing.com/HPImageArchive.aspx?format=js&n=7&idx=0";
+    private static final String JSON_URL = Constants.BING_DAILY_URL;
     private AsyncResponse delegate = null;
 
     ParseJSON() {
@@ -49,7 +51,7 @@ public class ParseJSON extends AsyncTask<Void, Void, String> {
             JSONObject mJObject = new JSONObject(mBuilder.toString().trim());
             JSONArray mJArray = mJObject.getJSONArray("images");
             for (int i = 0; i < mJArray.length(); i++) {
-                imageURL = "https://bing.com" + mJArray.getJSONObject(i).getString("url");
+                imageURL = Constants.BING_BASE_URL + mJArray.getJSONObject(i).getString("url");
                 imageURI.add(imageURL);
             }
         } catch (IOException | JSONException e) {

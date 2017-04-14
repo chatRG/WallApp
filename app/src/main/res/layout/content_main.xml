@@ -12,5 +12,5 @@
     fresco:progressBarAutoRotateInterval="1000"
     fresco:progressBarImage="@drawable/icon_main"
     fresco:progressBarImageScaleType="center"
-    fresco:retryImage="@drawable/icon_main"
-    fresco:retryImageScaleType="centerCrop" />
+    fresco:retryImage="@drawable/ic_retry"
+    fresco:retryImageScaleType="centerInside" />

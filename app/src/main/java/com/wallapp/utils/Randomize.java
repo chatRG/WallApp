@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 
 public class Randomize {
 
-    private static final String URL_DEF = "https://unsplash.it/";
-    private static final String URL_ALT = "https://source.unsplash.com/";
+    private static final String URL_DEF = Constants.UNO_BASE_URL;
+    private static final String URL_ALT = Constants.DOS_BASE_URL;
     private static SharedPreferences sharedPref;
     private static String WIDTH;
     private static String HEIGHT;
@@ -30,8 +30,8 @@ public class Randomize {
         String source = sharedPref.getString("source", "Uno");
 
         DeviceMetrics deviceMetrics = new DeviceMetrics();
-        WIDTH = deviceMetrics.getScreenWidth() * 2 + "";
-        HEIGHT = deviceMetrics.getScreenHeight() * 1.5 + "";
+        WIDTH = sharedPref.getInt("width", deviceMetrics.getScreenWidth()) + "";
+        HEIGHT = sharedPref.getInt("height", deviceMetrics.getScreenHeight()) + "";
 
         if (source.equals("Bing Daily") && !BING_DEF.isEmpty()) {
             setURI(BING_DEF);

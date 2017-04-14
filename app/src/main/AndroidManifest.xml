@@ -3,6 +3,7 @@
     package="com.wallapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
@@ -16,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
@@ -26,14 +29,17 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/PreferenceScreen" />
 
         <activity
             android:name=".activities.MainIntroActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Intro" />
 
         <activity
             android:name=".activities.SplashActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
