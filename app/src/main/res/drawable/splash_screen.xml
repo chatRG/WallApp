@@ -3,12 +3,12 @@
 
     <item android:drawable="@color/splash_bg" />
 
-    <item>
+    <!--<item>
         <bitmap
             android:gravity="center"
             android:src="@drawable/ic_splash" />
-    </item>
-    <!--<item android:drawable="@drawable/ic_intro" />-->
+    </item>-->
+    <item android:drawable="@drawable/ic_intro" />
 
 
 </layer-list>

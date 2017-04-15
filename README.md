@@ -1,5 +1,4 @@
 # WallApp v1.6
-===============
 
 ###### Generate random wallpapers that fits your mobile's personality.
 

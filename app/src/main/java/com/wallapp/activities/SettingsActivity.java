@@ -1,6 +1,7 @@
 package com.wallapp.activities;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -13,7 +14,8 @@ import android.view.View;
 import com.wallapp.R;
 import com.wallapp.fragments.AppInfoFragment;
 import com.wallapp.fragments.OpenLicFragment;
-import com.wallapp.utils.DeviceMetrics;
+import com.wallapp.service.WallAppService;
+import com.wallapp.utils.CustomMetrics;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override
@@ -100,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
             findPreference(CAT_KEY).setSummary(sharedPref.getString(CAT_KEY, "None"));
             findPreference(SET_AS_KEY).setSummary(sharedPref.getString(SET_AS_KEY, "WallApp"));
             findPreference(SRC_KEY).setSummary(sharedPref.getString(SRC_KEY, "Uno"));
-            findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best Fit"));
+            findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best fit"));
             findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
         }
 
@@ -112,10 +114,10 @@ public class SettingsActivity extends AppCompatActivity {
 
                 case OPEN_LICENSES_KEY:
 
-                    mToolbar.setTitle(R.string.open_source_licenses);
-
                     mTransaction.replace(R.id.content_frame, new OpenLicFragment(), null)
                             .addToBackStack(null).commit();
+                    mToolbar.setTitle(R.string.open_source_licenses);
+
                     break;
 
                 case ABOUT_KEY:
@@ -137,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
                 case SRC_KEY:
                     if (o.toString().equals("Dos")) {
                         togglePref(true, false, false);
-                    } else if (o.toString().equals("Bing Daily")) {
+                    } else if (o.toString().equals("Bing daily")) {
                         togglePref(false, false, false);
                     } else {
                         togglePref(false, true, true);
@@ -146,28 +148,28 @@ public class SettingsActivity extends AppCompatActivity {
 
                 case QUALITY_KEY:
                     if (o.toString().equals("HD")) {
-                        sharedPref.edit().putInt("height", new DeviceMetrics().getHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new DeviceMetrics().getHDWidth()).apply();
+                        sharedPref.edit().putInt("height", new CustomMetrics().getHDHeight()).apply();
+                        sharedPref.edit().putInt("width", new CustomMetrics().getHDWidth()).apply();
                     } else if (o.toString().equals("Full HD")) {
-                        sharedPref.edit().putInt("height", new DeviceMetrics().getFullHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new DeviceMetrics().getFullHDWidth()).apply();
+                        sharedPref.edit().putInt("height", new CustomMetrics().getFullHDHeight()).apply();
+                        sharedPref.edit().putInt("width", new CustomMetrics().getFullHDWidth()).apply();
                     } else if (o.toString().equals("Crazy UHD")) {
-                        sharedPref.edit().putInt("height", new DeviceMetrics().getMaxHeight()).apply();
-                        sharedPref.edit().putInt("width", new DeviceMetrics().getMaxWidth()).apply();
+                        sharedPref.edit().putInt("height", new CustomMetrics().getMaxHeight()).apply();
+                        sharedPref.edit().putInt("width", new CustomMetrics().getMaxWidth()).apply();
                     } else {
-                        sharedPref.edit().putInt("height", new DeviceMetrics().getScreenHeight()).apply();
-                        sharedPref.edit().putInt("width", new DeviceMetrics().getScreenWidth()).apply();
+                        sharedPref.edit().putInt("height", new CustomMetrics().getScreenHeight()).apply();
+                        sharedPref.edit().putInt("width", new CustomMetrics().getScreenWidth()).apply();
                     }
                     break;
 
                 case INTER_KEY:
-                    /*if (o.toString().equals("None")) {
+                    if (o.toString().equals("None")) {
                         getActivity().stopService(new Intent(getActivity(),
-                                WallpaperService.class));
+                                WallAppService.class));
                     } else {
                         getActivity().startService(new Intent(getActivity(),
-                                WallpaperService.class));
-                    }*/
+                                WallAppService.class));
+                    }
                     break;
             }
             return true;

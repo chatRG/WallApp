@@ -3,7 +3,7 @@ package com.wallapp.service;
 
 import android.os.AsyncTask;
 
-import com.wallapp.utils.Constants;
+import com.wallapp.utils.CustomConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +17,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParseJSON extends AsyncTask<Void, Void, String> {
-    private static final String JSON_URL = Constants.BING_DAILY_URL;
+public class ParseBing extends AsyncTask<Void, Void, String> {
+    private static final String JSON_URL = CustomConstants.BING_DAILY_URL;
     private AsyncResponse delegate = null;
 
-    ParseJSON() {
+    ParseBing() {
     }
 
-    public ParseJSON(AsyncResponse delegate) {
+    public ParseBing(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
@@ -51,7 +51,7 @@ public class ParseJSON extends AsyncTask<Void, Void, String> {
             JSONObject mJObject = new JSONObject(mBuilder.toString().trim());
             JSONArray mJArray = mJObject.getJSONArray("images");
             for (int i = 0; i < mJArray.length(); i++) {
-                imageURL = Constants.BING_BASE_URL + mJArray.getJSONObject(i).getString("url");
+                imageURL = CustomConstants.BING_BASE_URL + mJArray.getJSONObject(i).getString("url");
                 imageURI.add(imageURL);
             }
         } catch (IOException | JSONException e) {

@@ -1,10 +1,10 @@
 package com.wallapp.utils;
 
-
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import java.io.File;
@@ -18,40 +18,63 @@ public class ModWallpaper {
         this.activity = activity;
     }
 
-    public void setWallpaper(Bitmap bitmap, String setAs, File lastFile) {
+    public void setAsWallpaper(String setAs, File lastFile) {
 
         if (setAs.equals("System")) {
             Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setDataAndType(Uri.fromFile(lastFile), "image/jpeg");
             intent.putExtra("mimeType", "image/jpeg");
-            activity.startActivity(Intent.createChooser(intent, "Set as:"));
+            activity.startActivity(Intent.createChooser(intent, "Set wallpaper with"));
         } else {
-            if (bitmap.getWidth() >= bitmap.getHeight()) {
-                bitmap = Bitmap.createBitmap(bitmap,
-                        bitmap.getWidth() / 2 - bitmap.getHeight() / 2, 0,
-                        bitmap.getHeight(),
-                        bitmap.getHeight());
-            } else {
-                bitmap = Bitmap.createBitmap(bitmap, 0,
-                        bitmap.getHeight() / 2 - bitmap.getWidth() / 2,
-                        bitmap.getWidth(),
-                        bitmap.getWidth());
-            }
-            setBitmapWallpaper(bitmap);
+            setWallpaper(lastFile);
         }
     }
 
-    private void setBitmapWallpaper(Bitmap bitmap) {
-        DeviceMetrics devMetrics = new DeviceMetrics();
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
-        wallpaperManager.suggestDesiredDimensions(devMetrics.getScreenWidth(),
-                devMetrics.getScreenHeight());
+    private void setWallpaper(File lastFile) {
+        CustomMetrics customMetrics = new CustomMetrics();
+        int height = customMetrics.getScreenHeight();
+        int width = customMetrics.getScreenWidth() << 1;
+
+        String imagePath = lastFile.getAbsolutePath();
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap decodedSampleBitmap = BitmapFactory.decodeFile(imagePath, options);
+
+        WallpaperManager wm = WallpaperManager.getInstance(activity);
         try {
-            wallpaperManager.clear();
-            wallpaperManager.setBitmap(bitmap);
+            wm.setBitmap(decodedSampleBitmap);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            lastFile.delete();
         }
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options,
+                                      int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
     }
 }

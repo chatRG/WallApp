@@ -11,14 +11,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
-
-    public interface AsyncResponse {
-        void processFinish(boolean result);
-    }
 
     public AsyncResponse delegate = null;
 
@@ -32,11 +29,12 @@ public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
         try {
             Bitmap bmp = bitmaps[0];
             File root = Environment.getExternalStorageDirectory();
-            File mFile = new File(root.getAbsolutePath() + "/Wallapp");
+            File mFile = new File(root.getAbsolutePath() + File.separator + "WallApp");
             if (!mFile.exists())
                 mFile.mkdir();
-            String fileName = DateFormat.getDateTimeInstance().format(new Date());
-            fileName = "Wallapp_" + fileName + ".JPEG";
+            String fileName = "WallApp_" +
+                    new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date())
+                    + ".JPEG";
             File input_file = new File(mFile, fileName);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -60,5 +58,9 @@ public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         delegate.processFinish(aBoolean);
+    }
+
+    public interface AsyncResponse {
+        void processFinish(boolean result);
     }
 }

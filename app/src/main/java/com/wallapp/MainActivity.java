@@ -1,16 +1,11 @@
 package com.wallapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -19,9 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.androidadvance.topsnackbar.TSnackbar;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -40,8 +33,9 @@ import com.wallapp.activities.MainIntroActivity;
 import com.wallapp.activities.SettingsActivity;
 import com.wallapp.model.BitmapStore;
 import com.wallapp.service.Downloader;
-import com.wallapp.service.ParseJSON;
-import com.wallapp.utils.DeleteCache;
+import com.wallapp.service.ParseBing;
+import com.wallapp.utils.ModFile;
+import com.wallapp.utils.ModMisc;
 import com.wallapp.utils.ModWallpaper;
 import com.wallapp.utils.Randomize;
 
@@ -53,12 +47,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
         Downloader.AsyncResponse,
-        ParseJSON.AsyncResponse {
+        ParseBing.AsyncResponse {
 
     private static SharedPreferences sharedPref;
     private static String BING_DEF;
     private static Uri imageUri;
     private static Boolean isDownloaded = false;
+    private static Boolean isSetAs = false;
     private static BitmapStore imgStore;
     private static Bitmap mBitmap;
     @BindView(R.id.sdv)
@@ -115,9 +110,7 @@ public class MainActivity extends AppCompatActivity
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
-        //mProgress.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
-
-        if (!isNetworkAvailable()) {
+        if (!new ModMisc(MainActivity.this).isNetworkAvailable()) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.no_network_connection)
                     .setMessage(R.string.no_network_message)
@@ -131,19 +124,13 @@ public class MainActivity extends AppCompatActivity
                     .show();
         }
 
-        new ParseJSON(this).execute();
+        new ParseBing(MainActivity.this).execute();
         imgStore = new BitmapStore();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
     public void onClick(View view) {
+        ModMisc modMisc = new ModMisc(MainActivity.this);
         switch (view.getId()) {
 
             case R.id.download:
@@ -152,7 +139,7 @@ public class MainActivity extends AppCompatActivity
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
 
-                new Downloader(this).execute(imgStore.getBitmap());
+                new Downloader(MainActivity.this).execute(imgStore.getBitmap());
 
                 isDownloaded = true;
                 fabMenu.setEnabled(true);
@@ -160,7 +147,10 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.sdv:
-                new ImageViewer.Builder(MainActivity.this, new String[]{imageUri.toString()})
+                if (mBitmap == null || mBitmap.isRecycled())
+                    break;
+
+                new ImageViewer.Builder<>(MainActivity.this, new String[]{imageUri.toString()})
                         .setStartPosition(0)
                         .show();
                 fabMenu.close(true);
@@ -169,8 +159,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.rand:
                 fabMenu.close(true);
                 fabMenu.setEnabled(false);
-                new DeleteCache(MainActivity.this);
-                Randomize mRand = new Randomize(this, BING_DEF);
+                if (mBitmap != null)
+                    if (mBitmap.isRecycled())
+                        mBitmap.recycle();
+                Randomize mRand = new Randomize(MainActivity.this, BING_DEF);
                 mRand.updateURI();
                 imageUri = mRand.getURI();
                 draweeView.setVisibility(View.GONE);
@@ -187,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                         .build();
 
                 DataSource<CloseableReference<CloseableImage>> dataSource =
-                        imagePipeline.fetchDecodedImage(imageRequest, this);
+                        imagePipeline.fetchDecodedImage(imageRequest, MainActivity.this);
 
                 try {
                     dataSource.subscribe(new BaseBitmapDataSubscriber() {
@@ -205,91 +197,52 @@ public class MainActivity extends AppCompatActivity
                                          },
                             CallerThreadExecutor.getInstance());
                 } catch (Exception e) {
-                    showSnack(R.string.error_text);
+                    modMisc.showSnack(contentView, R.string.error_text);
                 } finally {
                     //dataSource.close();
                     isDownloaded = false;
+                    isSetAs = false;
                     draweeView.setEnabled(true);
                 }
                 break;
 
             case R.id.setwall:
                 fabMenu.close(true);
-                mProgress.setVisibility(ProgressBar.VISIBLE);
 
-                File mFile = getLastModFile();
-                String setType = sharedPref.getString("set_as", "WallApp");
-
-                if (setType.equals("System") && (mFile == null || !isDownloaded)) {
-                    showSnack(R.string.download_image_first);
-                    mProgress.setVisibility(ProgressBar.GONE);
+                // When set wallpaper is clicked before generating
+                if (imgStore.getBitmap() == null) {
+                    modMisc.showSnack(contentView, R.string.generate_image_first);
                     break;
                 }
 
-                new ModWallpaper(this).setWallpaper(mBitmap, setType, mFile);
+                mProgress.setVisibility(ProgressBar.VISIBLE);
+                isSetAs = true;
+                new Downloader(MainActivity.this).execute(imgStore.getBitmap());
 
-                if (setType.equals("WallApp")) {
-                    showSnack(R.string.wallpaper_set_success);
-                }
-                mProgress.setVisibility(ProgressBar.GONE);
                 break;
 
             case R.id.settings:
                 fabMenu.close(true);
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
+
                 break;
 
             case R.id.share:
                 fabMenu.close(true);
-                File lastFile = getLastModFile();
+                File lastFile = new ModFile(MainActivity.this).getLastModFile();
 
                 if (lastFile == null || !isDownloaded) {
-                    showSnack(R.string.download_image_first);
+                    modMisc.showSnack(contentView, R.string.download_image_first);
                     break;
                 }
                 final Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("image/jpeg");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lastFile));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)));
+
                 break;
         }
-    }
-
-    @Nullable
-    private File getLastModFile() {
-        String dirPath = Environment
-                .getExternalStorageDirectory()
-                .getAbsolutePath() + "/Wallapp/";
-        File dir = new File(dirPath);
-        File[] files = dir.listFiles();
-        if (files == null || files.length == 0) {
-            return null;
-        }
-
-        File lastModFile = files[0];
-        for (int i = 1; i < files.length; i++) {
-            if (lastModFile.lastModified() < files[i].lastModified()) {
-                lastModFile = files[i];
-            }
-        }
-        return lastModFile;
-    }
-
-    private void showSnack(int text) {
-        TSnackbar snackbar = TSnackbar
-                .make(contentView, text, TSnackbar.LENGTH_LONG);
-        snackbar.setActionTextColor(Color.WHITE);
-        snackbar.setIconLeft(R.drawable.ic_intro, 48);
-        snackbar.setIconPadding(8);
-        snackbar.setMaxWidth(3000);
-        View snackbarView = snackbar.getView();
-        snackbarView.setBackgroundColor(Color.parseColor("#546E7A"));
-        TextView textView = (TextView)
-                snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
-        textView.setTextColor(Color.parseColor("#EEEEEE"));
-        snackbar.show();
-
     }
 
     @Override
@@ -304,17 +257,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        new DeleteCache(this);
+        new ModFile(MainActivity.this).deleteCache();
         super.onDestroy();
+        if (mBitmap != null)
+            mBitmap.recycle();
     }
 
     @Override
     public void processFinish(boolean result) {
         mProgress.setVisibility(ProgressBar.GONE);
-        if (result)
-            showSnack(R.string.download_success);
-        else
-            showSnack(R.string.download_failed);
+        ModMisc modMisc = new ModMisc(MainActivity.this);
+
+        if (result && isDownloaded)
+            modMisc.showSnack(contentView, R.string.download_success);
+        else if (isDownloaded)
+            modMisc.showSnack(contentView, R.string.download_failed);
+
+        if (isSetAs) {
+            File mFile = new ModFile(MainActivity.this).getLastModFile();
+            String setAsType = sharedPref.getString("set_as", "WallApp");
+            new ModWallpaper(MainActivity.this).setAsWallpaper(setAsType, mFile);
+            modMisc.showSnack(contentView, R.string.wallpaper_set_success);
+        }
     }
 
     @Override

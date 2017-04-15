@@ -12,6 +12,8 @@
     <color name="fab_color">#2979FF</color>
     <color name="fab_ripple">#82B1FF</color>
 
+    <color name="snack_back">#546E7A</color>
+
     <color name="intro_1">#1E88E5</color>
     <color name="intro_2">#D81B60</color>
     <color name="intro_3">#5E35B1</color>
@@ -20,6 +22,7 @@
     <color name="blue_grey_800">#37474F</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorPrimary2">#EEEEEE</color>
     <color name="textColorSecondary">#AAECEFF1</color>
 
     <color name="textColorPrimaryDark">#000000</color>

@@ -26,10 +26,11 @@
 
     <string name="settings">Settings</string>
     <string name="error_text">Error</string>
-    <string name="download_image_first">Download Image First</string>
+    <string name="download_image_first">Download image first</string>
+    <string name="generate_image_first">Generate image first</string>
     <string name="share_image">Share</string>
 
-    <string name="set_as_type">Set As Type</string>
+    <string name="set_as_type">Set as type</string>
 
     <string-array name="set_as_choice">
         <item>WallApp</item>
@@ -62,16 +63,16 @@
     <string name="intro_desc_2">We need just this one permission to download your favorite images.</string>
     <string name="intro_desc_3">Almost done! Now let\'s generate some random wallpapers.</string>
 
-    <string name="download_success">Downloaded Successfully!</string>
-    <string name="download_failed">Download Failed!</string>
+    <string name="download_success">Downloaded successfully!</string>
+    <string name="download_failed">Download failed!</string>
 
-    <string name="wallpaper_set_success">Wallpaper Set Successfully!</string>
+    <string name="wallpaper_set_success">Wallpaper set successfully!</string>
 
     <string name="no_network_connection">No Network Connection</string>
     <string name="no_network_message">Network connection must be switched on to run this application</string>
 
     <string name="about_details">Developed by chatRg</string>
-    <string name="rights_reserved">© 2016&#8211;2017 \nAll rights reserved.\n</string>
+    <string name="rights_reserved">© 2016&#8211;2017 \nAll rights reserved.</string>
     <string name="open_source_licenses">Open Source Licenses</string>
 
 </resources>

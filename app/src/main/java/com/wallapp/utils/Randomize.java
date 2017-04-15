@@ -5,22 +5,21 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-public class Randomize {
+import com.wallapp.service.ParseBing;
 
-    private static final String URL_DEF = Constants.UNO_BASE_URL;
-    private static final String URL_ALT = Constants.DOS_BASE_URL;
-    private static SharedPreferences sharedPref;
-    private static String WIDTH;
-    private static String HEIGHT;
-    private static Uri imageUri;
+public class Randomize implements ParseBing.AsyncResponse {
+
+    private static final String URL_DEF = CustomConstants.UNO_BASE_URL;
+    private static final String URL_ALT = CustomConstants.DOS_BASE_URL;
     private static String BING_DEF;
-    Context activity;
-    private String url_ext;
+    private static SharedPreferences sharedPref;
+    private static Uri imageUri;
+    private Context context;
 
-    public Randomize(Context activity, String bing) {
-        this.activity = activity;
+    public Randomize(Context context, String bing) {
+        this.context = context;
         BING_DEF = bing;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public void updateURI() {
@@ -29,16 +28,20 @@ public class Randomize {
         String category = sharedPref.getString("category", null);
         String source = sharedPref.getString("source", "Uno");
 
-        DeviceMetrics deviceMetrics = new DeviceMetrics();
-        WIDTH = sharedPref.getInt("width", deviceMetrics.getScreenWidth()) + "";
-        HEIGHT = sharedPref.getInt("height", deviceMetrics.getScreenHeight()) + "";
+        CustomMetrics customMetrics = new CustomMetrics();
+        String WIDTH = sharedPref.getInt("width", customMetrics.getScreenWidth()) + "";
+        String HEIGHT = sharedPref.getInt("height", customMetrics.getScreenHeight()) + "";
 
-        if (source.equals("Bing Daily") && !BING_DEF.isEmpty()) {
-            setURI(BING_DEF);
+        if (source.equals("Bing daily")) {
+            if (!BING_DEF.isEmpty()) {
+                setURI(BING_DEF);
+            } else {
+                new ParseBing(Randomize.this).execute();
+            }
             return;
         }
 
-        url_ext = "";
+        String url_ext = "";
 
         if (category != null && !category.equals("None")) {
             url_ext = "featured/?" + category.toLowerCase();
@@ -61,5 +64,10 @@ public class Randomize {
 
     private void setURI(String url) {
         imageUri = Uri.parse(url);
+    }
+
+    @Override
+    public void jsonURI(String mURI) {
+        BING_DEF = mURI;
     }
 }
