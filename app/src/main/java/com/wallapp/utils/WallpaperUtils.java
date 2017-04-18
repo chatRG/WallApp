@@ -10,11 +10,11 @@ import android.net.Uri;
 import java.io.File;
 import java.io.IOException;
 
-public class ModWallpaper {
+public class WallpaperUtils {
 
     private Activity activity;
 
-    public ModWallpaper(Activity activity) {
+    public WallpaperUtils(Activity activity) {
         this.activity = activity;
     }
 
@@ -32,9 +32,9 @@ public class ModWallpaper {
     }
 
     private void setWallpaper(File lastFile) {
-        CustomMetrics customMetrics = new CustomMetrics();
-        int height = customMetrics.getScreenHeight();
-        int width = customMetrics.getScreenWidth() << 1;
+        MetricsUtils metricsUtils = new MetricsUtils();
+        int height = metricsUtils.getScreenHeight();
+        int width = metricsUtils.getScreenWidth() << 1;
 
         String imagePath = lastFile.getAbsolutePath();
 

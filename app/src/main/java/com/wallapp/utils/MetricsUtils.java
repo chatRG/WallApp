@@ -3,7 +3,7 @@ package com.wallapp.utils;
 
 import android.content.res.Resources;
 
-public class CustomMetrics {
+public class MetricsUtils {
 
     public int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;

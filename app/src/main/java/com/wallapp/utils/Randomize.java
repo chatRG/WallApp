@@ -28,9 +28,9 @@ public class Randomize implements ParseBing.AsyncResponse {
         String category = sharedPref.getString("category", null);
         String source = sharedPref.getString("source", "Uno");
 
-        CustomMetrics customMetrics = new CustomMetrics();
-        String WIDTH = sharedPref.getInt("width", customMetrics.getScreenWidth()) + "";
-        String HEIGHT = sharedPref.getInt("height", customMetrics.getScreenHeight()) + "";
+        MetricsUtils metricsUtils = new MetricsUtils();
+        String WIDTH = sharedPref.getInt("width", metricsUtils.getScreenWidth()) + "";
+        String HEIGHT = sharedPref.getInt("height", metricsUtils.getScreenHeight()) + "";
 
         if (source.equals("Bing daily")) {
             if (!BING_DEF.isEmpty()) {

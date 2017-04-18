@@ -34,10 +34,10 @@ import com.wallapp.activities.SettingsActivity;
 import com.wallapp.model.BitmapStore;
 import com.wallapp.service.Downloader;
 import com.wallapp.service.ParseBing;
-import com.wallapp.utils.ModFile;
-import com.wallapp.utils.ModMisc;
-import com.wallapp.utils.ModWallpaper;
+import com.wallapp.utils.FileUtils;
+import com.wallapp.utils.MiscUtils;
 import com.wallapp.utils.Randomize;
+import com.wallapp.utils.WallpaperUtils;
 
 import java.io.File;
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
-        if (!new ModMisc(MainActivity.this).isNetworkAvailable()) {
+        if (!new MiscUtils(MainActivity.this).isNetworkAvailable()) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.no_network_connection)
                     .setMessage(R.string.no_network_message)
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        ModMisc modMisc = new ModMisc(MainActivity.this);
+        MiscUtils miscUtils = new MiscUtils(MainActivity.this);
         switch (view.getId()) {
 
             case R.id.download:
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
                                          },
                             CallerThreadExecutor.getInstance());
                 } catch (Exception e) {
-                    modMisc.showSnack(contentView, R.string.error_text);
+                    miscUtils.showSnack(contentView, R.string.error_text);
                 } finally {
                     //dataSource.close();
                     isDownloaded = false;
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity
 
                 // When set wallpaper is clicked before generating
                 if (imgStore.getBitmap() == null) {
-                    modMisc.showSnack(contentView, R.string.generate_image_first);
+                    miscUtils.showSnack(contentView, R.string.generate_image_first);
                     break;
                 }
 
@@ -230,10 +230,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.share:
                 fabMenu.close(true);
-                File lastFile = new ModFile(MainActivity.this).getLastModFile();
+                File lastFile = new FileUtils(MainActivity.this).getLastModFile();
 
                 if (lastFile == null || !isDownloaded) {
-                    modMisc.showSnack(contentView, R.string.download_image_first);
+                    miscUtils.showSnack(contentView, R.string.download_image_first);
                     break;
                 }
                 final Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        new ModFile(MainActivity.this).deleteCache();
+        new FileUtils(MainActivity.this).deleteCache();
         super.onDestroy();
         if (mBitmap != null)
             mBitmap.recycle();
@@ -266,19 +266,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void processFinish(boolean result) {
         mProgress.setVisibility(ProgressBar.GONE);
-        ModMisc modMisc = new ModMisc(MainActivity.this);
+        MiscUtils miscUtils = new MiscUtils(MainActivity.this);
 
         if (result && isDownloaded)
-            modMisc.showSnack(contentView, R.string.download_success);
+            miscUtils.showSnack(contentView, R.string.download_success);
         else if (isDownloaded)
-            modMisc.showSnack(contentView, R.string.download_failed);
+            miscUtils.showSnack(contentView, R.string.download_failed);
 
         if (isSetAs) {
-            File mFile = new ModFile(MainActivity.this).getLastModFile();
+            File mFile = new FileUtils(MainActivity.this).getLastModFile();
             String setAsType = sharedPref.getString("set_as", "WallApp");
-            new ModWallpaper(MainActivity.this).setAsWallpaper(setAsType, mFile);
-            modMisc.showSnack(contentView, R.string.wallpaper_set_success);
+            new WallpaperUtils(MainActivity.this).setAsWallpaper(setAsType, mFile);
+            miscUtils.showSnack(contentView, R.string.wallpaper_set_success);
+            isSetAs = false;
         }
+        isDownloaded = false;
     }
 
     @Override

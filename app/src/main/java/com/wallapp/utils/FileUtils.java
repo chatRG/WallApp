@@ -8,10 +8,10 @@ import com.wallapp.R;
 
 import java.io.File;
 
-public class ModFile {
+public class FileUtils {
     private Context context;
 
-    public ModFile(Context context) {
+    public FileUtils(Context context) {
         this.context = context;
     }
 

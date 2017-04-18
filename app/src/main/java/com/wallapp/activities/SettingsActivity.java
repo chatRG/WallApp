@@ -1,7 +1,6 @@
 package com.wallapp.activities;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -14,8 +13,7 @@ import android.view.View;
 import com.wallapp.R;
 import com.wallapp.fragments.AppInfoFragment;
 import com.wallapp.fragments.OpenLicFragment;
-import com.wallapp.service.WallAppService;
-import com.wallapp.utils.CustomMetrics;
+import com.wallapp.utils.MetricsUtils;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override
@@ -148,28 +146,28 @@ public class SettingsActivity extends AppCompatActivity {
 
                 case QUALITY_KEY:
                     if (o.toString().equals("HD")) {
-                        sharedPref.edit().putInt("height", new CustomMetrics().getHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new CustomMetrics().getHDWidth()).apply();
+                        sharedPref.edit().putInt("height", new MetricsUtils().getHDHeight()).apply();
+                        sharedPref.edit().putInt("width", new MetricsUtils().getHDWidth()).apply();
                     } else if (o.toString().equals("Full HD")) {
-                        sharedPref.edit().putInt("height", new CustomMetrics().getFullHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new CustomMetrics().getFullHDWidth()).apply();
+                        sharedPref.edit().putInt("height", new MetricsUtils().getFullHDHeight()).apply();
+                        sharedPref.edit().putInt("width", new MetricsUtils().getFullHDWidth()).apply();
                     } else if (o.toString().equals("Crazy UHD")) {
-                        sharedPref.edit().putInt("height", new CustomMetrics().getMaxHeight()).apply();
-                        sharedPref.edit().putInt("width", new CustomMetrics().getMaxWidth()).apply();
+                        sharedPref.edit().putInt("height", new MetricsUtils().getMaxHeight()).apply();
+                        sharedPref.edit().putInt("width", new MetricsUtils().getMaxWidth()).apply();
                     } else {
-                        sharedPref.edit().putInt("height", new CustomMetrics().getScreenHeight()).apply();
-                        sharedPref.edit().putInt("width", new CustomMetrics().getScreenWidth()).apply();
+                        sharedPref.edit().putInt("height", new MetricsUtils().getScreenHeight()).apply();
+                        sharedPref.edit().putInt("width", new MetricsUtils().getScreenWidth()).apply();
                     }
                     break;
 
                 case INTER_KEY:
-                    if (o.toString().equals("None")) {
+                    /*if (o.toString().equals("None")) {
                         getActivity().stopService(new Intent(getActivity(),
                                 WallAppService.class));
                     } else {
                         getActivity().startService(new Intent(getActivity(),
                                 WallAppService.class));
-                    }
+                    }*/
                     break;
             }
             return true;

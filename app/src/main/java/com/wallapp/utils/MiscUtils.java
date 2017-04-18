@@ -12,10 +12,10 @@ import android.widget.TextView;
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.wallapp.R;
 
-public class ModMisc {
+public class MiscUtils {
     private Context context;
 
-    public ModMisc(Context context) {
+    public MiscUtils(Context context) {
         this.context = context;
     }
 
