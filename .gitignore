@@ -19,7 +19,7 @@ tags
 *.taghl
 
 # Built application files
-*.apk
+release*.apk
 *.ap_
 
 # Files for the Dalvik VM
