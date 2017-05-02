@@ -9,8 +9,8 @@ import com.wallapp.service.ParseBing;
 
 public class Randomize implements ParseBing.AsyncResponse {
 
-    private static final String URL_DEF = CustomConstants.UNO_BASE_URL;
-    private static final String URL_ALT = CustomConstants.DOS_BASE_URL;
+    private static final String URL_DEF = CustomConstants.ALPHA_BASE_URL;
+    private static final String URL_ALT = CustomConstants.GAMMA_BASE_URL;
     private static String BING_DEF;
     private static SharedPreferences sharedPref;
     private static Uri imageUri;
@@ -23,14 +23,8 @@ public class Randomize implements ParseBing.AsyncResponse {
     }
 
     public void updateURI() {
-        boolean isBlur = sharedPref.getBoolean("blur", false);
-        boolean isGray = sharedPref.getBoolean("gray", false);
         String category = sharedPref.getString("category", null);
-        String source = sharedPref.getString("source", "Uno");
-
-        MetricsUtils metricsUtils = new MetricsUtils();
-        String WIDTH = sharedPref.getInt("width", metricsUtils.getScreenWidth()) + "";
-        String HEIGHT = sharedPref.getInt("height", metricsUtils.getScreenHeight()) + "";
+        String source = sharedPref.getString("source", "Alpha");
 
         if (source.equals("Bing daily")) {
             if (!BING_DEF.isEmpty()) {
@@ -41,20 +35,9 @@ public class Randomize implements ParseBing.AsyncResponse {
             return;
         }
 
-        String url_ext = "";
-
         if (category != null && !category.equals("None")) {
-            url_ext = "featured/?" + category.toLowerCase();
+            String url_ext = "featured/?" + category.toLowerCase();
             setURI(URL_ALT + url_ext);
-        } else {
-            if (isGray)
-                url_ext += "g/";
-            url_ext += WIDTH + "/" + HEIGHT + "/";
-            if (isBlur)
-                url_ext += "?blur&random";
-            else
-                url_ext += "?random";
-            setURI(URL_DEF + url_ext);
         }
     }
 

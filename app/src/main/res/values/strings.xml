@@ -38,9 +38,10 @@
     </string-array>
 
     <string-array name="source">
-        <item>Uno</item>
-        <item>Dos</item>
+        <item>Alpha</item>
+        <item>Gamma</item>
         <item>Bing daily</item>
+        <item>Gradient</item>
     </string-array>
 
     <string-array name="quality">
@@ -56,12 +57,10 @@
         <item>Weekly</item>
     </string-array>
 
-    <string name="intro_title_2">Permission, please?</string>
-    <string name="intro_title_3">WallApp is all yours now</string>
-
-    <string name="intro_desc_1">Generate random wallpapers that fits your device\'s attitude.</string>
-    <string name="intro_desc_2">We need just this one permission to download your favorite images.</string>
-    <string name="intro_desc_3">Almost done! Now let\'s generate some random wallpapers.</string>
+    <string-array name="edit_items">
+        <item>Blur</item>
+        <item>Grayscale</item>
+    </string-array>
 
     <string name="download_success">Downloaded successfully!</string>
     <string name="download_failed">Download failed!</string>

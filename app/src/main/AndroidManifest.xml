@@ -32,9 +32,8 @@
             android:theme="@style/PreferenceScreen" />
 
         <activity
-            android:name=".activities.MainIntroActivity"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Intro" />
+            android:name=".activities.IntroActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <activity
             android:name=".activities.SplashActivity"

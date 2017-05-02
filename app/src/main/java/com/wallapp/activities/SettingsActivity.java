@@ -36,8 +36,6 @@ public class SettingsActivity extends AppCompatActivity {
             implements Preference.OnPreferenceClickListener,
             Preference.OnPreferenceChangeListener {
 
-        private static final String BLUR_KEY = "blur";
-        private static final String GRAY_KEY = "gray";
         private static final String CAT_KEY = "category";
         private static final String SET_AS_KEY = "set_as";
         private static final String SRC_KEY = "source";
@@ -89,17 +87,17 @@ public class SettingsActivity extends AppCompatActivity {
             sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-            if (sharedPref.getString(SRC_KEY, "Uno").equals("Dos")) {
-                togglePref(true, false, false);
-            } else if (sharedPref.getString(SRC_KEY, "Uno").equals("Bing Daily")) {
-                togglePref(false, false, false);
+            if (sharedPref.getString(SRC_KEY, "Alpha").equals("Gamma")) {
+                togglePref(true);
+            } else if (sharedPref.getString(SRC_KEY, "Alpha").equals("Bing Daily")) {
+                togglePref(false);
             } else {
-                togglePref(false, true, true);
+                togglePref(false);
             }
 
             findPreference(CAT_KEY).setSummary(sharedPref.getString(CAT_KEY, "None"));
             findPreference(SET_AS_KEY).setSummary(sharedPref.getString(SET_AS_KEY, "WallApp"));
-            findPreference(SRC_KEY).setSummary(sharedPref.getString(SRC_KEY, "Uno"));
+            findPreference(SRC_KEY).setSummary(sharedPref.getString(SRC_KEY, "Alpha"));
             findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best fit"));
             findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
         }
@@ -135,12 +133,12 @@ public class SettingsActivity extends AppCompatActivity {
             switch (preference.getKey()) {
 
                 case SRC_KEY:
-                    if (o.toString().equals("Dos")) {
-                        togglePref(true, false, false);
+                    if (o.toString().equals("Gamma")) {
+                        togglePref(true);
                     } else if (o.toString().equals("Bing daily")) {
-                        togglePref(false, false, false);
+                        togglePref(false);
                     } else {
-                        togglePref(false, true, true);
+                        togglePref(false);
                     }
                     break;
 
@@ -161,22 +159,13 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
 
                 case INTER_KEY:
-                    /*if (o.toString().equals("None")) {
-                        getActivity().stopService(new Intent(getActivity(),
-                                WallAppService.class));
-                    } else {
-                        getActivity().startService(new Intent(getActivity(),
-                                WallAppService.class));
-                    }*/
                     break;
             }
             return true;
         }
 
-        private void togglePref(boolean val1, boolean val2, boolean val3) {
+        private void togglePref(boolean val1) {
             findPreference(CAT_KEY).setEnabled(val1);
-            findPreference(BLUR_KEY).setEnabled(val2);
-            findPreference(GRAY_KEY).setEnabled(val3);
         }
     }
 }

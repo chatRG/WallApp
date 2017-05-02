@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Customize">
+    <!--<PreferenceCategory android:title="Customize">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -16,7 +16,7 @@
             android:summaryOn="Image will be in Grayscale"
             android:title="Gray" />
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
     <PreferenceCategory android:title="User controls">
 

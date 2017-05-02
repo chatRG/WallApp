@@ -29,11 +29,12 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.stfalcon.frescoimageviewer.ImageViewer;
-import com.wallapp.activities.MainIntroActivity;
+import com.wallapp.activities.IntroActivity;
 import com.wallapp.activities.SettingsActivity;
 import com.wallapp.model.BitmapStore;
 import com.wallapp.service.Downloader;
 import com.wallapp.service.ParseBing;
+import com.wallapp.utils.EditUtils;
 import com.wallapp.utils.FileUtils;
 import com.wallapp.utils.MiscUtils;
 import com.wallapp.utils.Randomize;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fabDownload;
     @BindView(R.id.setwall)
     FloatingActionButton fabSet;
+    @BindView(R.id.edit_wall)
+    FloatingActionButton fabEdit;
     @BindView(R.id.rand)
     FloatingActionButton fabRand;
 
@@ -94,9 +97,8 @@ public class MainActivity extends AppCompatActivity
     private void firstTime() {
         boolean isFirstStart = sharedPref.getBoolean("firstStart", true);
         if (isFirstStart) {
-            Intent i = new Intent(getBaseContext(), MainIntroActivity.class);
+            Intent i = new Intent(getBaseContext(), IntroActivity.class);
             startActivity(i);
-            sharedPref.edit().putBoolean("firstStart", false).apply();
             this.finish();
         }
     }
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         fabSettings.setOnClickListener(this);
         fabDownload.setOnClickListener(this);
         fabSet.setOnClickListener(this);
+        fabEdit.setOnClickListener(this);
         fabRand.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity
                 new ImageViewer.Builder<>(MainActivity.this, new String[]{imageUri.toString()})
                         .setStartPosition(0)
                         .show();
+
                 fabMenu.close(true);
                 break;
 
@@ -204,6 +208,20 @@ public class MainActivity extends AppCompatActivity
                     isSetAs = false;
                     draweeView.setEnabled(true);
                 }
+                break;
+
+            case R.id.edit_wall:
+                fabMenu.close(true);
+
+                // When edit wallpaper without generating
+                if (mBitmap == null || imgStore.getBitmap() == null) {
+                    miscUtils.showSnack(contentView, R.string.generate_image_first);
+                    break;
+                }
+
+                mBitmap = Bitmap.createBitmap(EditUtils
+                        .editImage(MainActivity.this, mBitmap, draweeView));
+                imgStore.setBitmap(mBitmap);
                 break;
 
             case R.id.setwall:
@@ -268,12 +286,13 @@ public class MainActivity extends AppCompatActivity
         mProgress.setVisibility(ProgressBar.GONE);
         MiscUtils miscUtils = new MiscUtils(MainActivity.this);
 
-        if (result && isDownloaded)
+        if (result && isDownloaded && !isSetAs)
             miscUtils.showSnack(contentView, R.string.download_success);
-        else if (isDownloaded)
+
+        else if (isDownloaded && !isSetAs)
             miscUtils.showSnack(contentView, R.string.download_failed);
 
-        if (isSetAs) {
+        else if (isSetAs) {
             File mFile = new FileUtils(MainActivity.this).getLastModFile();
             String setAsType = sharedPref.getString("set_as", "WallApp");
             new WallpaperUtils(MainActivity.this).setAsWallpaper(setAsType, mFile);

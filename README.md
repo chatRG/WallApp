@@ -4,8 +4,10 @@
 
 
 
+[![Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/chatRG/WallApp/master/License.txt)
 [![](https://img.shields.io/badge/Android-5.0.1+-brightred.svg?style=flat)]()
 [![](https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat)]()
+[![](https://img.shields.io/badge/download-apk-blue.svg?style=flat)](https://github.com/chatRG/WallApp/blob/master/release/WallApp_v161.apk?raw=true)
 
 
 ![Banner](https://raw.githubusercontent.com/chatRG/WallApp/master/art/Banner.png)
@@ -14,8 +16,7 @@
   * Random wallpapers
   * Material Design
   * Categories to choose from
-  * Blur wallpapers
-  * Grayscale wallpapers
+  * Blur / Grayscale wallpapers
   * Download in Full HD
   * Set wallpapers without downloading (Set as type: WallApp)
   
@@ -28,6 +29,8 @@
 - Android Support (Google)
 - Android Design (Google)
 - Butterknife (jakewharton)
+
+See application for the entire list of open source libraries used.
 
 Send me a request if you are willing to contribute. :sunglasses:
 
