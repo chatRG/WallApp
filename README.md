@@ -7,7 +7,7 @@
 [![Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/chatRG/WallApp/master/License.txt)
 [![](https://img.shields.io/badge/Android-5.0.1+-brightred.svg?style=flat)]()
 [![](https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat)]()
-[![](https://img.shields.io/badge/download-apk-blue.svg?style=flat)](https://github.com/chatRG/WallApp/blob/master/release/WallApp_v161.apk?raw=true)
+[![](https://img.shields.io/badge/download-apk-blue.svg?style=flat)](https://github.com/chatRG/WallApp/blob/master/release/WallApp_v164.apk?raw=true)
 
 
 ![Banner](https://raw.githubusercontent.com/chatRG/WallApp/master/art/Banner.png)
