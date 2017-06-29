@@ -10,12 +10,14 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.wallapp.CustomConstants;
 import com.wallapp.R;
 import com.wallapp.fragments.AppInfoFragment;
 import com.wallapp.fragments.OpenLicFragment;
 import com.wallapp.utils.MetricsUtils;
 
 public class SettingsActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             init();
 
-
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,17 +88,21 @@ public class SettingsActivity extends AppCompatActivity {
             sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-            if (sharedPref.getString(SRC_KEY, "Alpha").equals("Gamma")) {
+            if (sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA)
+                    .equals(CustomConstants.SRC_ALPHA)) {
                 togglePref(true);
-            } else if (sharedPref.getString(SRC_KEY, "Alpha").equals("Bing Daily")) {
+            } else if (sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA)
+                    .equals(CustomConstants.SRC_BING)) {
                 togglePref(false);
             } else {
                 togglePref(false);
             }
 
             findPreference(CAT_KEY).setSummary(sharedPref.getString(CAT_KEY, "None"));
-            findPreference(SET_AS_KEY).setSummary(sharedPref.getString(SET_AS_KEY, "WallApp"));
-            findPreference(SRC_KEY).setSummary(sharedPref.getString(SRC_KEY, "Alpha"));
+            findPreference(SET_AS_KEY)
+                    .setSummary(sharedPref.getString(SET_AS_KEY, CustomConstants.APP_NAME));
+            findPreference(SRC_KEY)
+                    .setSummary(sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA));
             findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best fit"));
             findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
         }
@@ -133,9 +138,9 @@ public class SettingsActivity extends AppCompatActivity {
             switch (preference.getKey()) {
 
                 case SRC_KEY:
-                    if (o.toString().equals("Gamma")) {
+                    if (o.toString().equals(CustomConstants.SRC_ALPHA)) {
                         togglePref(true);
-                    } else if (o.toString().equals("Bing daily")) {
+                    } else if (o.toString().equals(CustomConstants.SRC_BING)) {
                         togglePref(false);
                     } else {
                         togglePref(false);
@@ -144,17 +149,17 @@ public class SettingsActivity extends AppCompatActivity {
 
                 case QUALITY_KEY:
                     if (o.toString().equals("HD")) {
-                        sharedPref.edit().putInt("height", new MetricsUtils().getHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new MetricsUtils().getHDWidth()).apply();
+                        sharedPref.edit().putInt("height", MetricsUtils.getHDHeight()).apply();
+                        sharedPref.edit().putInt("width", MetricsUtils.getHDWidth()).apply();
                     } else if (o.toString().equals("Full HD")) {
-                        sharedPref.edit().putInt("height", new MetricsUtils().getFullHDHeight()).apply();
-                        sharedPref.edit().putInt("width", new MetricsUtils().getFullHDWidth()).apply();
+                        sharedPref.edit().putInt("height", MetricsUtils.getFullHDHeight()).apply();
+                        sharedPref.edit().putInt("width", MetricsUtils.getFullHDWidth()).apply();
                     } else if (o.toString().equals("Crazy UHD")) {
-                        sharedPref.edit().putInt("height", new MetricsUtils().getMaxHeight()).apply();
-                        sharedPref.edit().putInt("width", new MetricsUtils().getMaxWidth()).apply();
+                        sharedPref.edit().putInt("height", MetricsUtils.getMaxHeight()).apply();
+                        sharedPref.edit().putInt("width", MetricsUtils.getMaxWidth()).apply();
                     } else {
-                        sharedPref.edit().putInt("height", new MetricsUtils().getScreenHeight()).apply();
-                        sharedPref.edit().putInt("width", new MetricsUtils().getScreenWidth()).apply();
+                        sharedPref.edit().putInt("height", MetricsUtils.getScreenHeight()).apply();
+                        sharedPref.edit().putInt("width", MetricsUtils.getScreenWidth()).apply();
                     }
                     break;
 

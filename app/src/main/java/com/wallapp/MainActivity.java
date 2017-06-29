@@ -1,6 +1,5 @@
 package com.wallapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,13 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -26,28 +25,26 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.wallapp.activities.IntroActivity;
 import com.wallapp.activities.SettingsActivity;
-import com.wallapp.model.BitmapStore;
-import com.wallapp.service.Downloader;
-import com.wallapp.service.ParseBing;
-import com.wallapp.utils.EditUtils;
+import com.wallapp.async.Downloader;
+import com.wallapp.async.ParseBing;
 import com.wallapp.utils.FileUtils;
-import com.wallapp.utils.MiscUtils;
 import com.wallapp.utils.Randomize;
-import com.wallapp.utils.WallpaperUtils;
+import com.wallapp.utils.Utils;
+import com.wallapp.wallpaper.ImageUtils;
+import com.wallapp.wallpaper.WallpaperUtils;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener,
-        Downloader.AsyncResponse,
+        implements Downloader.AsyncResponse,
         ParseBing.AsyncResponse {
 
     private static SharedPreferences sharedPref;
@@ -55,8 +52,9 @@ public class MainActivity extends AppCompatActivity
     private static Uri imageUri;
     private static Boolean isDownloaded = false;
     private static Boolean isSetAs = false;
-    private static BitmapStore imgStore;
     private static Bitmap mBitmap;
+    private static Bitmap backupBitmap;
+
     @BindView(R.id.sdv)
     SimpleDraweeView draweeView;
     @BindView(android.R.id.content)
@@ -65,18 +63,6 @@ public class MainActivity extends AppCompatActivity
     ProgressBar mProgress;
     @BindView(R.id.fab_menu)
     FloatingActionMenu fabMenu;
-    @BindView(R.id.share)
-    FloatingActionButton fabShare;
-    @BindView(R.id.settings)
-    FloatingActionButton fabSettings;
-    @BindView(R.id.download)
-    FloatingActionButton fabDownload;
-    @BindView(R.id.setwall)
-    FloatingActionButton fabSet;
-    @BindView(R.id.edit_wall)
-    FloatingActionButton fabEdit;
-    @BindView(R.id.rand)
-    FloatingActionButton fabRand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +73,25 @@ public class MainActivity extends AppCompatActivity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        firstTime();
-
-        ButterKnife.bind(this);
         init();
     }
 
+    private void init() {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        // check connection
+        if (!Utils.isNetworkAvailable(this)) {
+            Utils.checkNetworkDialog(MainActivity.this);
+        } else {
+            new ParseBing(MainActivity.this).execute();
+        }
+
+        firstTime();
+        ButterKnife.bind(this);
+    }
+
     private void firstTime() {
-        boolean isFirstStart = sharedPref.getBoolean("firstStart", true);
+        boolean isFirstStart = sharedPref.getBoolean(CustomConstants.PREF_FIRST_START, true);
         if (isFirstStart) {
             Intent i = new Intent(getBaseContext(), IntroActivity.class);
             startActivity(i);
@@ -103,163 +99,157 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void init() {
+    @OnClick(R.id.download)
+    public void onDownloadClick() {
+        mProgress.setVisibility(ProgressBar.VISIBLE);
+        draweeView.setEnabled(false);
+        fabMenu.close(true);
+        fabMenu.setEnabled(false);
 
-        draweeView.setOnClickListener(this);
-        fabSettings.setOnClickListener(this);
-        fabDownload.setOnClickListener(this);
-        fabSet.setOnClickListener(this);
-        fabEdit.setOnClickListener(this);
-        fabRand.setOnClickListener(this);
-        fabShare.setOnClickListener(this);
+        new Downloader(MainActivity.this).execute(mBitmap);
 
-        if (!new MiscUtils(MainActivity.this).isNetworkAvailable()) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.no_network_connection)
-                    .setMessage(R.string.no_network_message)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finishFromChild(MainActivity.this);
-                        }
-                    })
-                    .setCancelable(false)
-                    .setIcon(R.drawable.ic_error)
-                    .show();
-        }
-
-        new ParseBing(MainActivity.this).execute();
-        imgStore = new BitmapStore();
+        isDownloaded = true;
+        fabMenu.setEnabled(true);
+        draweeView.setEnabled(true);
     }
 
-    @Override
-    public void onClick(View view) {
-        MiscUtils miscUtils = new MiscUtils(MainActivity.this);
-        switch (view.getId()) {
+    @OnClick(R.id.sdv)
+    public void onDraweeViewClick() {
+        if (mBitmap == null || mBitmap.isRecycled())
+            return;
 
-            case R.id.download:
-                mProgress.setVisibility(ProgressBar.VISIBLE);
-                draweeView.setEnabled(false);
-                fabMenu.close(true);
-                fabMenu.setEnabled(false);
+        new ImageViewer.Builder<>(MainActivity.this, new String[]{imageUri.toString()})
+                .setStartPosition(0)
+                .show();
+        fabMenu.close(true);
+    }
 
-                new Downloader(MainActivity.this).execute(imgStore.getBitmap());
+    @OnClick(R.id.share)
+    public void onShareClick() {
+        fabMenu.close(true);
+        File lastFile = new FileUtils(MainActivity.this).getLastModFile();
 
-                isDownloaded = true;
-                fabMenu.setEnabled(true);
-                draweeView.setEnabled(true);
-                break;
+        if (lastFile == null || !isDownloaded) {
+            Utils.showSnack(this, contentView, R.string.download_image_first);
+            return;
+        }
+        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/jpeg");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lastFile));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)));
+    }
 
-            case R.id.sdv:
-                if (mBitmap == null || mBitmap.isRecycled())
-                    break;
+    @OnClick(R.id.edit_wall)
+    public void onEditClick() {
+        fabMenu.close(true);
 
-                new ImageViewer.Builder<>(MainActivity.this, new String[]{imageUri.toString()})
-                        .setStartPosition(0)
-                        .show();
+        // When edit wallpaper without generating
+        if (mBitmap == null || mBitmap.isRecycled()) {
+            Utils.showSnack(this, contentView, R.string.generate_image_first);
+            return;
+        }
 
-                fabMenu.close(true);
-                break;
+        new MaterialDialog.Builder(this)
+                .title("Filters")
+                .items(R.array.edit_items)
+                .positiveText(android.R.string.ok)
+                .neutralText(android.R.string.cancel)
+                .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog,
+                                               Integer[] which, CharSequence[] text) {
+                        for (int i : which) {
+                            if (i == 0) {
+                                mBitmap = ImageUtils.getBlurBitmap(MainActivity.this, mBitmap, 25f);
+                            }
+                            if (i == 1) {
+                                mBitmap = ImageUtils.getGrayBitmap(mBitmap);
+                            }
+                            if (i == 2) {
+                                mBitmap = ImageUtils.getDarkenBitmap(mBitmap, false);
+                            }
+                            if (i == 3) {
+                                mBitmap = Bitmap.createBitmap(backupBitmap);
+                            }
+                        }
+                        draweeView.setImageBitmap(mBitmap);
+                        return true;
+                    }
+                })
+                .cancelable(false)
+                .show();
+    }
 
-            case R.id.rand:
-                fabMenu.close(true);
-                fabMenu.setEnabled(false);
-                if (mBitmap != null)
-                    if (mBitmap.isRecycled())
-                        mBitmap.recycle();
-                Randomize mRand = new Randomize(MainActivity.this, BING_DEF);
-                mRand.updateURI();
-                imageUri = mRand.getURI();
-                draweeView.setVisibility(View.GONE);
-                draweeView.setEnabled(false);
-                Fresco.getImagePipeline().clearCaches();
-                draweeView.setImageURI(imageUri);
-                draweeView.setVisibility(View.VISIBLE);
+    @OnClick(R.id.setwall)
+    public void onSetWallpaperClick() {
+        fabMenu.close(true);
 
-                ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                ImageRequest imageRequest = ImageRequestBuilder
-                        .newBuilderWithSource(imageUri)
-                        .setRequestPriority(Priority.HIGH)
-                        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
-                        .build();
+        // When set wallpaper is clicked before generating
+        if (mBitmap == null) {
+            Utils.showSnack(this, contentView, R.string.generate_image_first);
+            return;
+        }
 
-                DataSource<CloseableReference<CloseableImage>> dataSource =
-                        imagePipeline.fetchDecodedImage(imageRequest, MainActivity.this);
+        mProgress.setVisibility(ProgressBar.VISIBLE);
+        isSetAs = true;
+        new Downloader(MainActivity.this).execute(mBitmap);
+    }
 
-                try {
-                    dataSource.subscribe(new BaseBitmapDataSubscriber() {
-                                             @Override
-                                             public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                                                 // Lifetime of Bitmap is limited to this method only.
-                                                 mBitmap = bitmap;
-                                                 imgStore.setBitmap(bitmap);
-                                             }
+    @OnClick(R.id.settings)
+    public void onSettingsClick() {
+        fabMenu.close(true);
+        Intent intent1 = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent1);
+    }
 
-                                             @Override
-                                             public void onFailureImpl(DataSource dataSource) {
-                                                 // No cleanup required here.
-                                             }
-                                         },
-                            CallerThreadExecutor.getInstance());
-                } catch (Exception e) {
-                    miscUtils.showSnack(contentView, R.string.error_text);
-                } finally {
-                    //dataSource.close();
-                    isDownloaded = false;
-                    isSetAs = false;
-                    draweeView.setEnabled(true);
-                }
-                break;
+    @OnClick(R.id.rand)
+    public void onRandomClick() {
+        fabMenu.close(true);
+        fabMenu.setEnabled(false);
+        if (mBitmap != null)
+            if (mBitmap.isRecycled())
+                mBitmap.recycle();
+        Randomize mRand = new Randomize(MainActivity.this, BING_DEF);
+        mRand.updateURI();
+        imageUri = mRand.getURI();
+        draweeView.setVisibility(View.GONE);
+        draweeView.setEnabled(false);
+        Fresco.getImagePipeline().clearCaches();
+        draweeView.setImageURI(imageUri);
+        draweeView.setVisibility(View.VISIBLE);
 
-            case R.id.edit_wall:
-                fabMenu.close(true);
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        ImageRequest imageRequest = ImageRequestBuilder
+                .newBuilderWithSource(imageUri)
+                .setRequestPriority(Priority.HIGH)
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+                .build();
 
-                // When edit wallpaper without generating
-                if (mBitmap == null || imgStore.getBitmap() == null) {
-                    miscUtils.showSnack(contentView, R.string.generate_image_first);
-                    break;
-                }
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchDecodedImage(imageRequest, MainActivity.this);
 
-                mBitmap = Bitmap.createBitmap(EditUtils
-                        .editImage(MainActivity.this, mBitmap, draweeView));
-                imgStore.setBitmap(mBitmap);
-                break;
+        try {
+            dataSource.subscribe(new BaseBitmapDataSubscriber() {
+                                     @Override
+                                     public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                                         // Lifetime of Bitmap is limited to this method only.
+                                         mBitmap = bitmap;
+                                         backupBitmap = bitmap;
+                                     }
 
-            case R.id.setwall:
-                fabMenu.close(true);
-
-                // When set wallpaper is clicked before generating
-                if (imgStore.getBitmap() == null) {
-                    miscUtils.showSnack(contentView, R.string.generate_image_first);
-                    break;
-                }
-
-                mProgress.setVisibility(ProgressBar.VISIBLE);
-                isSetAs = true;
-                new Downloader(MainActivity.this).execute(imgStore.getBitmap());
-
-                break;
-
-            case R.id.settings:
-                fabMenu.close(true);
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-
-                break;
-
-            case R.id.share:
-                fabMenu.close(true);
-                File lastFile = new FileUtils(MainActivity.this).getLastModFile();
-
-                if (lastFile == null || !isDownloaded) {
-                    miscUtils.showSnack(contentView, R.string.download_image_first);
-                    break;
-                }
-                final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("image/jpeg");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lastFile));
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)));
-
-                break;
+                                     @Override
+                                     public void onFailureImpl(DataSource dataSource) {
+                                         // No cleanup required here.
+                                     }
+                                 },
+                    CallerThreadExecutor.getInstance());
+        } catch (Exception e) {
+            Utils.showSnack(this, contentView, R.string.error_text);
+        } finally {
+            //dataSource.close();
+            isDownloaded = false;
+            isSetAs = false;
+            draweeView.setEnabled(true);
         }
     }
 
@@ -284,22 +274,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void processFinish(boolean result) {
         mProgress.setVisibility(ProgressBar.GONE);
-        MiscUtils miscUtils = new MiscUtils(MainActivity.this);
 
         if (result && isDownloaded && !isSetAs)
-            miscUtils.showSnack(contentView, R.string.download_success);
+            Utils.showSnack(this, contentView, R.string.download_success);
 
         else if (isDownloaded && !isSetAs)
-            miscUtils.showSnack(contentView, R.string.download_failed);
+            Utils.showSnack(this, contentView, R.string.download_failed);
 
         else if (isSetAs) {
             File mFile = new FileUtils(MainActivity.this).getLastModFile();
-            String setAsType = sharedPref.getString("set_as", "WallApp");
-            new WallpaperUtils(MainActivity.this).setAsWallpaper(setAsType, mFile);
-            miscUtils.showSnack(contentView, R.string.wallpaper_set_success);
+            String setAsType = sharedPref.getString(
+                    CustomConstants.PREF_SET_AS, CustomConstants.APP_NAME);
+            WallpaperUtils.setAsWallpaper(MainActivity.this, setAsType, mFile);
+            Utils.showSnack(this, contentView, R.string.wallpaper_set_success);
             isSetAs = false;
         }
-        isDownloaded = false;
     }
 
     @Override

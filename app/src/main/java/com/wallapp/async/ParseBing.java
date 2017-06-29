@@ -1,9 +1,9 @@
-package com.wallapp.service;
+package com.wallapp.async;
 
 
 import android.os.AsyncTask;
 
-import com.wallapp.utils.CustomConstants;
+import com.wallapp.CustomConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,9 +20,6 @@ import java.util.List;
 public class ParseBing extends AsyncTask<Void, Void, String> {
     private static final String JSON_URL = CustomConstants.BING_DAILY_URL;
     private AsyncResponse delegate = null;
-
-    ParseBing() {
-    }
 
     public ParseBing(AsyncResponse delegate) {
         this.delegate = delegate;

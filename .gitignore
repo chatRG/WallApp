@@ -26,7 +26,7 @@ release*.apk
 *.dex
 
 # Java source files
-Constants.java
+*Constants.java
 
 # Java class files
 *.class

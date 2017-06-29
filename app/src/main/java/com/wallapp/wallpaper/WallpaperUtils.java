@@ -1,40 +1,36 @@
-package com.wallapp.utils;
+package com.wallapp.wallpaper;
 
-import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+
+import com.wallapp.utils.MetricsUtils;
 
 import java.io.File;
 import java.io.IOException;
 
 public class WallpaperUtils {
 
-    private Activity activity;
-
-    public WallpaperUtils(Activity activity) {
-        this.activity = activity;
-    }
-
-    public void setAsWallpaper(String setAs, File lastFile) {
+    public static void setAsWallpaper(Context context, String setAs, File lastFile) {
 
         if (setAs.equals("System")) {
             Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setDataAndType(Uri.fromFile(lastFile), "image/jpeg");
             intent.putExtra("mimeType", "image/jpeg");
-            activity.startActivity(Intent.createChooser(intent, "Set wallpaper with"));
+            context.startActivity(Intent.createChooser(intent, "Set wallpaper with"));
         } else {
-            setWallpaper(lastFile);
+            setWallpaper(context, lastFile);
         }
     }
 
-    private void setWallpaper(File lastFile) {
-        MetricsUtils metricsUtils = new MetricsUtils();
-        int height = metricsUtils.getScreenHeight();
-        int width = metricsUtils.getScreenWidth() << 1;
+    private static void setWallpaper(Context context, File lastFile) {
+
+        int height = MetricsUtils.getScreenHeight();
+        int width = MetricsUtils.getScreenWidth() << 1;
 
         String imagePath = lastFile.getAbsolutePath();
 
@@ -47,7 +43,7 @@ public class WallpaperUtils {
         options.inJustDecodeBounds = false;
         Bitmap decodedSampleBitmap = BitmapFactory.decodeFile(imagePath, options);
 
-        WallpaperManager wm = WallpaperManager.getInstance(activity);
+        WallpaperManager wm = WallpaperManager.getInstance(context);
         try {
             wm.setBitmap(decodedSampleBitmap);
         } catch (IOException e) {
@@ -57,8 +53,8 @@ public class WallpaperUtils {
         }
     }
 
-    private int calculateInSampleSize(BitmapFactory.Options options,
-                                      int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;

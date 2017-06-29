@@ -1,10 +1,14 @@
-package com.wallapp.utils;
+package com.wallapp.wallpaper;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -22,8 +26,8 @@ public class ImageUtils {
         Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
         Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
 
-        blurScript.setRadius(radius);
         blurScript.setInput(allIn);
+        blurScript.setRadius(radius);
         blurScript.forEach(allOut);
 
         allOut.copyTo(outBitmap);
@@ -53,5 +57,22 @@ public class ImageUtils {
 
         bitmap.recycle();
         return outBitmap;
+    }
+
+    public static Bitmap getDarkenBitmap(Bitmap bitmap, boolean flag) {
+
+        Canvas canvas = new Canvas(bitmap);
+        Paint p = new Paint(Color.RED);
+        ColorFilter filter;
+        if (flag)
+            // Darken for flag = true
+            filter = new LightingColorFilter(0xFF7F7F7F, 0x22222222);
+        else
+            // Faded for flag = false
+            filter = new LightingColorFilter(0xFF7F7F7F, 0x44444444);
+        p.setColorFilter(filter);
+        canvas.drawBitmap(bitmap, new Matrix(), p);
+
+        return bitmap;
     }
 }

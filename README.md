@@ -1,6 +1,6 @@
 # WallApp v1.6
 
-###### Generate random wallpapers that fits your mobile's personality.
+###### The app that your phone needs and the one it deserves too!
 
 
 
@@ -16,7 +16,7 @@
   * Random wallpapers
   * Material Design
   * Categories to choose from
-  * Blur / Grayscale wallpapers
+  * Blur / Grayscale / Faded wallpapers
   * Download in Full HD
   * Set wallpapers without downloading (Set as type: WallApp)
   

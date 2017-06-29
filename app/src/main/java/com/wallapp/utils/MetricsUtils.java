@@ -3,37 +3,39 @@ package com.wallapp.utils;
 
 import android.content.res.Resources;
 
+import com.wallapp.CustomConstants;
+
 public class MetricsUtils {
 
-    public int getScreenWidth() {
+    public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    public int getScreenHeight() {
+    public static int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
-    public int getHDWidth() {
-        return 1280;
+    public static int getHDWidth() {
+        return CustomConstants.HDWidth;
     }
 
-    public int getHDHeight() {
-        return 720;
+    public static int getHDHeight() {
+        return CustomConstants.HDHeight;
     }
 
-    public int getFullHDWidth() {
-        return 1920;
+    public static int getFullHDWidth() {
+        return CustomConstants.FHDWidth;
     }
 
-    public int getFullHDHeight() {
-        return 1080;
+    public static int getFullHDHeight() {
+        return CustomConstants.FHDHeight;
     }
 
-    public int getMaxWidth() {
-        return 2880;
+    public static int getMaxWidth() {
+        return CustomConstants.MAXWidth;
     }
 
-    public int getMaxHeight() {
-        return 1680;
+    public static int getMaxHeight() {
+        return CustomConstants.MAXHeight;
     }
 }

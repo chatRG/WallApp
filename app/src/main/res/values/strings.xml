@@ -39,7 +39,6 @@
 
     <string-array name="source">
         <item>Alpha</item>
-        <item>Gamma</item>
         <item>Bing daily</item>
         <item>Gradient</item>
     </string-array>
@@ -60,6 +59,8 @@
     <string-array name="edit_items">
         <item>Blur</item>
         <item>Grayscale</item>
+        <item>Faded</item>
+        <item>None</item>
     </string-array>
 
     <string name="download_success">Downloaded successfully!</string>
