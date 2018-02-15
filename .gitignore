@@ -25,9 +25,6 @@ release*.apk
 # Files for the Dalvik VM
 *.dex
 
-# Java source files
-*Constants.java
-
 # Java class files
 *.class
 
