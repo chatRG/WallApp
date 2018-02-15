@@ -1,4 +1,4 @@
-package com.wallapp.wallpaper;
+package com.wallapp.utils;
 
 import android.app.WallpaperManager;
 import android.content.Context;

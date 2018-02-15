@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.wallapp"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 2311164
-        versionName "1.6.4"
+        versionCode 2311165
+        versionName "1.6.5"
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

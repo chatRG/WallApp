@@ -10,7 +10,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 import com.wallapp.R;
 import com.wallapp.fragments.AppInfoFragment;
 import com.wallapp.fragments.OpenLicFragment;

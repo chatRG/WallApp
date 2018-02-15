@@ -8,10 +8,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 import com.wallapp.async.ParseBing;
 
-public class Randomize implements ParseBing.AsyncResponse {
+public class RandomizeUtils implements ParseBing.AsyncResponse {
 
     private static final String URL_ALT = CustomConstants.ALPHA_BASE_URL;
     private static String BING_DEF;
@@ -20,7 +20,7 @@ public class Randomize implements ParseBing.AsyncResponse {
     private static Bitmap mBitmap;
     private Context context;
 
-    public Randomize(Context context, String bing) {
+    public RandomizeUtils(Context context, String bing) {
         this.context = context;
         BING_DEF = bing;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -37,7 +37,7 @@ public class Randomize implements ParseBing.AsyncResponse {
             if (!BING_DEF.isEmpty()) {
                 setURI(BING_DEF);
             } else {
-                new ParseBing(Randomize.this).execute();
+                new ParseBing(RandomizeUtils.this).execute();
             }
         } else if (source.equals(CustomConstants.SRC_ALPHA)) {
             String url_ext = width + "x" + height;

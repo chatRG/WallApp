@@ -18,7 +18,7 @@ import com.wallapp.R;
  * Created by chatRG.
  */
 
-public class Utils {
+public class CommonUtils {
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager

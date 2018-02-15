@@ -3,7 +3,7 @@ package com.wallapp.utils;
 
 import android.content.res.Resources;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 
 public class MetricsUtils {
 

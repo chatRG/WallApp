@@ -11,7 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 import com.wallapp.MainActivity;
 
 public class IntroActivity extends AppCompatActivity {

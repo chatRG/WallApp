@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

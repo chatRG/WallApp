@@ -31,11 +31,12 @@ import com.wallapp.activities.IntroActivity;
 import com.wallapp.activities.SettingsActivity;
 import com.wallapp.async.Downloader;
 import com.wallapp.async.ParseBing;
+import com.wallapp.store.CustomConstants;
 import com.wallapp.utils.FileUtils;
-import com.wallapp.utils.Randomize;
-import com.wallapp.utils.Utils;
-import com.wallapp.wallpaper.ImageUtils;
-import com.wallapp.wallpaper.WallpaperUtils;
+import com.wallapp.utils.RandomizeUtils;
+import com.wallapp.utils.CommonUtils;
+import com.wallapp.utils.ImageUtils;
+import com.wallapp.utils.WallpaperUtils;
 
 import java.io.File;
 
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         // check connection
-        if (!Utils.isNetworkAvailable(this)) {
-            Utils.checkNetworkDialog(MainActivity.this);
+        if (!CommonUtils.isNetworkAvailable(this)) {
+            CommonUtils.checkNetworkDialog(MainActivity.this);
         } else {
             new ParseBing(MainActivity.this).execute();
         }
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         File lastFile = new FileUtils(MainActivity.this).getLastModFile();
 
         if (lastFile == null || !isDownloaded) {
-            Utils.showSnack(this, contentView, R.string.download_image_first);
+            CommonUtils.showSnack(this, contentView, R.string.download_image_first);
             return;
         }
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
         // When edit wallpaper without generating
         if (mBitmap == null || mBitmap.isRecycled()) {
-            Utils.showSnack(this, contentView, R.string.generate_image_first);
+            CommonUtils.showSnack(this, contentView, R.string.generate_image_first);
             return;
         }
 
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 
         // When set wallpaper is clicked before generating
         if (mBitmap == null) {
-            Utils.showSnack(this, contentView, R.string.generate_image_first);
+            CommonUtils.showSnack(this, contentView, R.string.generate_image_first);
             return;
         }
 
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         if (mBitmap != null)
             if (mBitmap.isRecycled())
                 mBitmap.recycle();
-        Randomize mRand = new Randomize(MainActivity.this, BING_DEF);
+        RandomizeUtils mRand = new RandomizeUtils(MainActivity.this, BING_DEF);
         mRand.updateURI();
         imageUri = mRand.getURI();
         draweeView.setVisibility(View.GONE);
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity
                                  },
                     CallerThreadExecutor.getInstance());
         } catch (Exception e) {
-            Utils.showSnack(this, contentView, R.string.error_text);
+            CommonUtils.showSnack(this, contentView, R.string.error_text);
         } finally {
             //dataSource.close();
             isDownloaded = false;
@@ -276,17 +277,17 @@ public class MainActivity extends AppCompatActivity
         mProgress.setVisibility(ProgressBar.GONE);
 
         if (result && isDownloaded && !isSetAs)
-            Utils.showSnack(this, contentView, R.string.download_success);
+            CommonUtils.showSnack(this, contentView, R.string.download_success);
 
         else if (isDownloaded && !isSetAs)
-            Utils.showSnack(this, contentView, R.string.download_failed);
+            CommonUtils.showSnack(this, contentView, R.string.download_failed);
 
         else if (isSetAs) {
             File mFile = new FileUtils(MainActivity.this).getLastModFile();
             String setAsType = sharedPref.getString(
                     CustomConstants.PREF_SET_AS, CustomConstants.APP_NAME);
             WallpaperUtils.setAsWallpaper(MainActivity.this, setAsType, mFile);
-            Utils.showSnack(this, contentView, R.string.wallpaper_set_success);
+            CommonUtils.showSnack(this, contentView, R.string.wallpaper_set_success);
             isSetAs = false;
         }
     }

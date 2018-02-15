@@ -3,7 +3,7 @@ package com.wallapp.async;
 
 import android.os.AsyncTask;
 
-import com.wallapp.CustomConstants;
+import com.wallapp.store.CustomConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
