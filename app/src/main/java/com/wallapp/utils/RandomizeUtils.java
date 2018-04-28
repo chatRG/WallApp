@@ -8,12 +8,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 import com.wallapp.async.ParseBing;
 
 public class RandomizeUtils implements ParseBing.AsyncResponse {
 
-    private static final String URL_ALT = CustomConstants.ALPHA_BASE_URL;
+    private static final String URL_ALT = StaticVars.ALPHA_BASE_URL;
     private static String BING_DEF;
     private static SharedPreferences sharedPref;
     private static Uri imageUri;
@@ -28,18 +28,18 @@ public class RandomizeUtils implements ParseBing.AsyncResponse {
 
     public void updateURI() {
         String category = sharedPref.getString("category", "None");
-        String source = sharedPref.getString("source", CustomConstants.SRC_ALPHA);
+        String source = sharedPref.getString("source", StaticVars.SRC_ALPHA);
 
         int width = sharedPref.getInt("width", MetricsUtils.getScreenWidth());
         int height = sharedPref.getInt("height", MetricsUtils.getScreenHeight());
 
-        if (source.equals(CustomConstants.SRC_BING)) {
+        if (source.equals(StaticVars.SRC_BING)) {
             if (!BING_DEF.isEmpty()) {
                 setURI(BING_DEF);
             } else {
                 new ParseBing(RandomizeUtils.this).execute();
             }
-        } else if (source.equals(CustomConstants.SRC_ALPHA)) {
+        } else if (source.equals(StaticVars.SRC_ALPHA)) {
             String url_ext = width + "x" + height;
             if (!category.equals("None")) {
                 url_ext += "/?" + category.toLowerCase();

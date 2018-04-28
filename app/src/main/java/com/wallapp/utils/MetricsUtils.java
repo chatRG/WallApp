@@ -3,7 +3,7 @@ package com.wallapp.utils;
 
 import android.content.res.Resources;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 
 public class MetricsUtils {
 
@@ -16,26 +16,26 @@ public class MetricsUtils {
     }
 
     public static int getHDWidth() {
-        return CustomConstants.HDWidth;
+        return StaticVars.HDWidth;
     }
 
     public static int getHDHeight() {
-        return CustomConstants.HDHeight;
+        return StaticVars.HDHeight;
     }
 
     public static int getFullHDWidth() {
-        return CustomConstants.FHDWidth;
+        return StaticVars.FHDWidth;
     }
 
     public static int getFullHDHeight() {
-        return CustomConstants.FHDHeight;
+        return StaticVars.FHDHeight;
     }
 
     public static int getMaxWidth() {
-        return CustomConstants.MAXWidth;
+        return StaticVars.MAXWidth;
     }
 
     public static int getMaxHeight() {
-        return CustomConstants.MAXHeight;
+        return StaticVars.MAXHeight;
     }
 }

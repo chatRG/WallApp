@@ -38,28 +38,30 @@
     </string-array>
 
     <string-array name="source">
-        <item>Alpha</item>
+        <item>Unsplash</item>
         <item>Bing daily</item>
         <item>Gradient</item>
     </string-array>
 
     <string-array name="quality">
         <item>Best fit</item>
-        <item>HD</item>
-        <item>Full HD</item>
-        <item>Crazy UHD</item>
+        <item>HD (720p)</item>
+        <item>Full HD (1080p)</item>
+        <item>Crazy UHD (1680p)</item>
     </string-array>
 
+<!--
     <string-array name="interval">
         <item>None</item>
         <item>Daily</item>
         <item>Weekly</item>
     </string-array>
+-->
 
     <string-array name="edit_items">
         <item>Blur</item>
         <item>Grayscale</item>
-        <item>Faded</item>
+        <item>Darken</item>
         <item>None</item>
     </string-array>
 
@@ -72,7 +74,7 @@
     <string name="no_network_message">Network connection must be switched on to run this application</string>
 
     <string name="about_details">Developed by chatRG</string>
-    <string name="rights_reserved">© 2016&#8211;2017 \nAll rights reserved.</string>
+    <string name="rights_reserved">© 2016 &#8211; today \nAll rights reserved.</string>
     <string name="open_source_licenses">Open Source Licenses</string>
 
 </resources>

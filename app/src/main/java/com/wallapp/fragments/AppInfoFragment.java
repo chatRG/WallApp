@@ -21,7 +21,7 @@ public class AppInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_about, container, false);
 
-        versionCode = (TextView) view.findViewById(R.id.versionCode);
+        versionCode = view.findViewById(R.id.versionCode);
         PackageInfo pInfo = null;
         try {
             pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
