@@ -3,7 +3,7 @@ package com.wallapp.async;
 
 import android.os.AsyncTask;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParseBing extends AsyncTask<Void, Void, String> {
-    private static final String JSON_URL = CustomConstants.BING_DAILY_URL;
+    private static final String JSON_URL = StaticVars.BING_DAILY_URL;
     private AsyncResponse delegate = null;
 
     public ParseBing(AsyncResponse delegate) {
@@ -48,7 +48,7 @@ public class ParseBing extends AsyncTask<Void, Void, String> {
             JSONObject mJObject = new JSONObject(mBuilder.toString().trim());
             JSONArray mJArray = mJObject.getJSONArray("images");
             for (int i = 0; i < mJArray.length(); i++) {
-                imageURL = CustomConstants.BING_BASE_URL + mJArray.getJSONObject(i).getString("url");
+                imageURL = StaticVars.BING_BASE_URL + mJArray.getJSONObject(i).getString("url");
                 imageURI.add(imageURL);
             }
         } catch (IOException | JSONException e) {

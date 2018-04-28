@@ -10,7 +10,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 import com.wallapp.R;
 import com.wallapp.fragments.AppInfoFragment;
 import com.wallapp.fragments.OpenLicFragment;
@@ -80,19 +80,19 @@ public class SettingsActivity extends AppCompatActivity {
                     .setOnPreferenceChangeListener(this);
             findPreference(QUALITY_KEY)
                     .setOnPreferenceChangeListener(this);
-            findPreference(INTER_KEY)
-                    .setOnPreferenceChangeListener(this);
+//            findPreference(INTER_KEY)
+//                    .setOnPreferenceChangeListener(this);
         }
 
         private void init() {
             sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-            if (sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA)
-                    .equals(CustomConstants.SRC_ALPHA)) {
+            if (sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA)
+                    .equals(StaticVars.SRC_ALPHA)) {
                 togglePref(true);
-            } else if (sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA)
-                    .equals(CustomConstants.SRC_BING)) {
+            } else if (sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA)
+                    .equals(StaticVars.SRC_BING)) {
                 togglePref(false);
             } else {
                 togglePref(false);
@@ -100,11 +100,11 @@ public class SettingsActivity extends AppCompatActivity {
 
             findPreference(CAT_KEY).setSummary(sharedPref.getString(CAT_KEY, "None"));
             findPreference(SET_AS_KEY)
-                    .setSummary(sharedPref.getString(SET_AS_KEY, CustomConstants.APP_NAME));
+                    .setSummary(sharedPref.getString(SET_AS_KEY, StaticVars.APP_NAME));
             findPreference(SRC_KEY)
-                    .setSummary(sharedPref.getString(SRC_KEY, CustomConstants.SRC_ALPHA));
+                    .setSummary(sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA));
             findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best fit"));
-            findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
+            // findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
         }
 
         @Override
@@ -138,9 +138,9 @@ public class SettingsActivity extends AppCompatActivity {
             switch (preference.getKey()) {
 
                 case SRC_KEY:
-                    if (o.toString().equals(CustomConstants.SRC_ALPHA)) {
+                    if (o.toString().equals(StaticVars.SRC_ALPHA)) {
                         togglePref(true);
-                    } else if (o.toString().equals(CustomConstants.SRC_BING)) {
+                    } else if (o.toString().equals(StaticVars.SRC_BING)) {
                         togglePref(false);
                     } else {
                         togglePref(false);

@@ -11,7 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 import com.wallapp.MainActivity;
 
 public class IntroActivity extends AppCompatActivity {
@@ -34,7 +34,7 @@ public class IntroActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivity(new Intent(getBaseContext(), MainActivity.class));
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-                        .edit().putBoolean(CustomConstants.PREF_FIRST_START, false).apply();
+                        .edit().putBoolean(StaticVars.PREF_FIRST_START, false).apply();
                 finish();
             }
         }

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,11 +31,11 @@ public class Downloader extends AsyncTask<Bitmap, Void, Boolean> {
         try {
             Bitmap bmp = bitmaps[0];
             File root = Environment.getExternalStorageDirectory();
-            File mFile = new File(root.getAbsolutePath() + File.separator + CustomConstants.APP_NAME);
+            File mFile = new File(root.getAbsolutePath() + File.separator + StaticVars.APP_NAME);
             if (!mFile.exists())
                 mFile.mkdir();
-            String fileName = CustomConstants.APP_NAME + "_" +
-                    new SimpleDateFormat(CustomConstants.DATE_FORMAT, Locale.getDefault())
+            String fileName = StaticVars.APP_NAME + "_" +
+                    new SimpleDateFormat(StaticVars.DATE_FORMAT, Locale.getDefault())
                             .format(new Date()) + ".JPEG";
             File input_file = new File(mFile, fileName);
 

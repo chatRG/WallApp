@@ -31,7 +31,7 @@ import com.wallapp.activities.IntroActivity;
 import com.wallapp.activities.SettingsActivity;
 import com.wallapp.async.Downloader;
 import com.wallapp.async.ParseBing;
-import com.wallapp.store.CustomConstants;
+import com.wallapp.store.StaticVars;
 import com.wallapp.utils.FileUtils;
 import com.wallapp.utils.RandomizeUtils;
 import com.wallapp.utils.CommonUtils;
@@ -87,17 +87,13 @@ public class MainActivity extends AppCompatActivity
             new ParseBing(MainActivity.this).execute();
         }
 
-        firstTime();
-        ButterKnife.bind(this);
-    }
-
-    private void firstTime() {
-        boolean isFirstStart = sharedPref.getBoolean(CustomConstants.PREF_FIRST_START, true);
+        boolean isFirstStart = sharedPref.getBoolean(StaticVars.PREF_FIRST_START, true);
         if (isFirstStart) {
             Intent i = new Intent(getBaseContext(), IntroActivity.class);
             startActivity(i);
             this.finish();
         }
+        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.download)
@@ -167,7 +163,7 @@ public class MainActivity extends AppCompatActivity
                                 mBitmap = ImageUtils.getGrayBitmap(mBitmap);
                             }
                             if (i == 2) {
-                                mBitmap = ImageUtils.getDarkenBitmap(mBitmap, false);
+                                mBitmap = ImageUtils.getDarkenBitmap(mBitmap);
                             }
                             if (i == 3) {
                                 mBitmap = Bitmap.createBitmap(backupBitmap);
@@ -207,12 +203,14 @@ public class MainActivity extends AppCompatActivity
     public void onRandomClick() {
         fabMenu.close(true);
         fabMenu.setEnabled(false);
-        if (mBitmap != null)
-            if (mBitmap.isRecycled())
-                mBitmap.recycle();
+
+        if (mBitmap != null && mBitmap.isRecycled())
+            mBitmap.recycle();
+
         RandomizeUtils mRand = new RandomizeUtils(MainActivity.this, BING_DEF);
         mRand.updateURI();
         imageUri = mRand.getURI();
+
         draweeView.setVisibility(View.GONE);
         draweeView.setEnabled(false);
         Fresco.getImagePipeline().clearCaches();
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity
         else if (isSetAs) {
             File mFile = new FileUtils(MainActivity.this).getLastModFile();
             String setAsType = sharedPref.getString(
-                    CustomConstants.PREF_SET_AS, CustomConstants.APP_NAME);
+                    StaticVars.PREF_SET_AS, StaticVars.APP_NAME);
             WallpaperUtils.setAsWallpaper(MainActivity.this, setAsType, mFile);
             CommonUtils.showSnack(this, contentView, R.string.wallpaper_set_success);
             isSetAs = false;

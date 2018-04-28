@@ -14,28 +14,33 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v4.content.ContextCompat;
 
 public class ImageUtils {
 
     public static Bitmap getBlurBitmap(Context context, Bitmap bitmap, float radius) {
 
-        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        float intensity = 25f;
+
+        int width = Math.round(bitmap.getWidth());
+        int height = Math.round(bitmap.getHeight());
+
+        Bitmap input = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+        Bitmap output = Bitmap.createBitmap(input);
+
         RenderScript rs = RenderScript.create(context);
-        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        ScriptIntrinsicBlur intrinsicBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
-        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
-        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+        Allocation inputallocation = Allocation.createFromBitmap(rs, input);
+        Allocation outputallocation = Allocation.createFromBitmap(rs, output);
+        intrinsicBlur.setRadius(intensity);
+        intrinsicBlur.setInput(inputallocation);
+        intrinsicBlur.forEach(outputallocation);
 
-        blurScript.setInput(allIn);
-        blurScript.setRadius(radius);
-        blurScript.forEach(allOut);
+        outputallocation.copyTo(output);
 
-        allOut.copyTo(outBitmap);
-
-        bitmap.recycle();
-        rs.destroy();
-
-        return outBitmap;
+        return output;
     }
 
     public static Bitmap getGrayBitmap(Bitmap bitmap) {
@@ -59,17 +64,12 @@ public class ImageUtils {
         return outBitmap;
     }
 
-    public static Bitmap getDarkenBitmap(Bitmap bitmap, boolean flag) {
+    public static Bitmap getDarkenBitmap(Bitmap bitmap) {
 
         Canvas canvas = new Canvas(bitmap);
-        Paint p = new Paint(Color.RED);
+        Paint p = new Paint();
         ColorFilter filter;
-        if (flag)
-            // Darken for flag = true
-            filter = new LightingColorFilter(0xFF7F7F7F, 0x22222222);
-        else
-            // Faded for flag = false
-            filter = new LightingColorFilter(0xFF7F7F7F, 0x44444444);
+        filter = new LightingColorFilter(0xFF999999, 0x00000000);
         p.setColorFilter(filter);
         canvas.drawBitmap(bitmap, new Matrix(), p);
 
