@@ -1,6 +1,6 @@
 package com.wallapp.store;
 
-public interface CustomConstants {
+public interface StaticContent {
     String ALPHA_BASE_URL = "https://source.unsplash.com/featured/";
     String BING_BASE_URL = "https://bing.com/";
     String BING_DAILY_URL = BING_BASE_URL + "HPImageArchive.aspx?format=js&n=7&idx=0";
