@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -27,12 +29,14 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.clans.fab.FloatingActionMenu;
 import com.stfalcon.frescoimageviewer.ImageViewer;
+import com.uniquestudio.lowpoly.LowPoly;
 import com.wallapp.activities.IntroActivity;
 import com.wallapp.activities.SettingsActivity;
 import com.wallapp.async.Downloader;
 import com.wallapp.async.ParseBing;
 import com.wallapp.store.StaticVars;
 import com.wallapp.utils.FileUtils;
+import com.wallapp.utils.GradientUtils;
 import com.wallapp.utils.RandomizeUtils;
 import com.wallapp.utils.CommonUtils;
 import com.wallapp.utils.ImageUtils;
@@ -47,6 +51,8 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements Downloader.AsyncResponse,
         ParseBing.AsyncResponse {
+
+    private static String TAG = "MainActivity";
 
     private static SharedPreferences sharedPref;
     private static String BING_DEF;
@@ -166,6 +172,9 @@ public class MainActivity extends AppCompatActivity
                                 mBitmap = ImageUtils.getDarkenBitmap(mBitmap);
                             }
                             if (i == 3) {
+                                mBitmap = LowPoly.generate(mBitmap, 40);
+                            }
+                            if (i == 4) {
                                 mBitmap = Bitmap.createBitmap(backupBitmap);
                             }
                         }

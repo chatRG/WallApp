@@ -48,9 +48,9 @@ public class ImageUtils {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
 
-        Bitmap outBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(outBitmap);
+        Canvas canvas = new Canvas(output);
         Paint paint = new Paint();
 
         ColorMatrix colorMatrix = new ColorMatrix();
@@ -61,18 +61,24 @@ public class ImageUtils {
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
         bitmap.recycle();
-        return outBitmap;
+        return output;
     }
 
     public static Bitmap getDarkenBitmap(Bitmap bitmap) {
 
-        Canvas canvas = new Canvas(bitmap);
-        Paint p = new Paint();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(output);
+        Paint paint = new Paint();
+
         ColorFilter filter;
         filter = new LightingColorFilter(0xFF999999, 0x00000000);
-        p.setColorFilter(filter);
-        canvas.drawBitmap(bitmap, new Matrix(), p);
+        paint.setColorFilter(filter);
+        canvas.drawBitmap(bitmap, new Matrix(), paint);
 
-        return bitmap;
+        return output;
     }
 }

@@ -88,10 +88,10 @@ public class SettingsActivity extends AppCompatActivity {
             sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-            if (sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA)
-                    .equals(StaticVars.SRC_ALPHA)) {
+            if (sharedPref.getString(SRC_KEY, StaticVars.SRC_UNSPLASH)
+                    .equals(StaticVars.SRC_UNSPLASH)) {
                 togglePref(true);
-            } else if (sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA)
+            } else if (sharedPref.getString(SRC_KEY, StaticVars.SRC_UNSPLASH)
                     .equals(StaticVars.SRC_BING)) {
                 togglePref(false);
             } else {
@@ -102,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
             findPreference(SET_AS_KEY)
                     .setSummary(sharedPref.getString(SET_AS_KEY, StaticVars.APP_NAME));
             findPreference(SRC_KEY)
-                    .setSummary(sharedPref.getString(SRC_KEY, StaticVars.SRC_ALPHA));
+                    .setSummary(sharedPref.getString(SRC_KEY, StaticVars.SRC_UNSPLASH));
             findPreference(QUALITY_KEY).setSummary(sharedPref.getString(QUALITY_KEY, "Best fit"));
             // findPreference(INTER_KEY).setSummary(sharedPref.getString(INTER_KEY, "None"));
         }
@@ -138,7 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
             switch (preference.getKey()) {
 
                 case SRC_KEY:
-                    if (o.toString().equals(StaticVars.SRC_ALPHA)) {
+                    if (o.toString().equals(StaticVars.SRC_UNSPLASH)) {
                         togglePref(true);
                     } else if (o.toString().equals(StaticVars.SRC_BING)) {
                         togglePref(false);

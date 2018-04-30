@@ -1,4 +1,4 @@
-# WallApp v1.6
+# WallApp v1.7
 
 ###### The app that your phone needs and the one it deserves too!
 
@@ -44,7 +44,7 @@ For all of this free stuff, you can surely offer a cup of coffee. Thanks!
 License
 -------
 
-    Copyright 2017 chatRG
+    Copyright 2018 chatRG
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

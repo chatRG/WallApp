@@ -17,7 +17,6 @@ public class RandomizeUtils implements ParseBing.AsyncResponse {
     private static String BING_DEF;
     private static SharedPreferences sharedPref;
     private static Uri imageUri;
-    private static Bitmap mBitmap;
     private Context context;
 
     public RandomizeUtils(Context context, String bing) {
@@ -28,7 +27,7 @@ public class RandomizeUtils implements ParseBing.AsyncResponse {
 
     public void updateURI() {
         String category = sharedPref.getString("category", "None");
-        String source = sharedPref.getString("source", StaticVars.SRC_ALPHA);
+        String source = sharedPref.getString("source", StaticVars.SRC_UNSPLASH);
 
         int width = sharedPref.getInt("width", MetricsUtils.getScreenWidth());
         int height = sharedPref.getInt("height", MetricsUtils.getScreenHeight());
@@ -39,27 +38,13 @@ public class RandomizeUtils implements ParseBing.AsyncResponse {
             } else {
                 new ParseBing(RandomizeUtils.this).execute();
             }
-        } else if (source.equals(StaticVars.SRC_ALPHA)) {
+        } else if (source.equals(StaticVars.SRC_UNSPLASH)) {
             String url_ext = width + "x" + height;
             if (!category.equals("None")) {
                 url_ext += "/?" + category.toLowerCase();
             }
             setURI(URL_ALT + url_ext);
         }
-    }
-
-    public void createGradient() {
-        GradientDrawable gd = new GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0xFF616261, 0xFF131313});
-        mBitmap = Bitmap.createBitmap(MetricsUtils.getScreenWidth(),
-                MetricsUtils.getScreenHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(mBitmap);
-        gd.draw(canvas);
-    }
-
-    public Bitmap getBitmapGradient() {
-        return mBitmap;
     }
 
     public Uri getURI() {

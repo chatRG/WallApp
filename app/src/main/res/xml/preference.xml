@@ -19,7 +19,7 @@
             android:title="@string/set_as_type" />
 
         <ListPreference
-            android:defaultValue="Alpha"
+            android:defaultValue="Unsplash"
             android:entries="@array/source"
             android:entryValues="@array/source"
             android:key="source"

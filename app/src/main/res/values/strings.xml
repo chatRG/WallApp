@@ -62,6 +62,7 @@
         <item>Blur</item>
         <item>Grayscale</item>
         <item>Darken</item>
+        <item>Low Poly</item>
         <item>None</item>
     </string-array>
 
