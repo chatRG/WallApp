@@ -35,7 +35,7 @@ See application for the entire list of open source libraries used.
 Send me a request if you are willing to contribute. :sunglasses:
 
 
-## Donation
+## Sponsor
 For all of this free stuff, you can surely offer a cup of hot cocoa. Thanks!
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/chatrg/5usd)
