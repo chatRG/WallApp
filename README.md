@@ -1,3 +1,5 @@
+###### _Note: Current version is stable and this project is not actively maintained. Forks are welcome!_
+
 # WallApp v1.7
 
 ###### The app that your phone needs and the one it deserves too!
